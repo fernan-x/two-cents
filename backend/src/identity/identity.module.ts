@@ -82,7 +82,8 @@ import {
   SESSION_REPOSITORY,
   USER_REPOSITORY,
 } from './domain/ports/repositories';
-import { NoopBudgetPorts } from './infrastructure/budgets/noop-budget-ports';
+import { BudgetsCoreModule } from '../budgets/budgets-core.module';
+import { AccountHandoff } from '../budgets/application/use-cases/account-handoff';
 import { AppLinkBuilder } from './infrastructure/link-builder';
 import { NestIdentityMailer } from './infrastructure/mail/nest-identity-mailer';
 import { DrizzleAuthIdentityRepository } from './infrastructure/persistence/drizzle-auth-identity.repository';
@@ -129,9 +130,9 @@ const adapters: Provider[] = [
   { provide: IDENTITY_MAILER, useClass: NestIdentityMailer },
   { provide: EXPORT_ARCHIVE_BUILDER, useClass: ZipExportBuilder },
   { provide: LINK_BUILDER, useClass: AppLinkBuilder },
-  NoopBudgetPorts,
-  { provide: BUDGET_MEMBERSHIP_PORT, useExisting: NoopBudgetPorts },
-  { provide: BUDGET_EXPORT_PORT, useExisting: NoopBudgetPorts },
+  // Spec 002 implements the budget ports (account deletion hand-off, export).
+  { provide: BUDGET_MEMBERSHIP_PORT, useExisting: AccountHandoff },
+  { provide: BUDGET_EXPORT_PORT, useExisting: AccountHandoff },
 ];
 
 const services: Provider[] = [
@@ -177,6 +178,7 @@ const useCases: Provider[] = [
 
 @Global()
 @Module({
+  imports: [BudgetsCoreModule],
   controllers: [
     AuthController,
     AppleNotificationsController,

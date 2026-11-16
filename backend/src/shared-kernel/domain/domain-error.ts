@@ -6,6 +6,10 @@ export interface DomainErrorDetails {
   linkToken?: string;
   emailHint?: string;
   issues?: Array<{ path: Array<string | number>; message: string }>;
+  inviterName?: string;
+  invitedEmailMasked?: string;
+  budgetId?: string;
+  current?: unknown;
   /** Overrides the default HTTP status for this code (e.g. ACCOUNT_PENDING_DELETION on sign-up is 409). */
   status?: number;
 }

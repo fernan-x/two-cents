@@ -15,4 +15,5 @@ Object.assign(process.env, {
   APPLE_TEAM_ID: 'TEAMID',
   APPLE_KEY_ID: 'KEYID',
   GOOGLE_WEB_CLIENT_ID: 'web-client.apps.googleusercontent.com',
+  INVITE_CODE_SECRET: 'test-invite-code-secret-0123456789abcdef',
 });

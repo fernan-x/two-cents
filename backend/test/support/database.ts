@@ -20,12 +20,14 @@ export function createTestDatabase(): {
   };
 }
 
-/** Empties every table in the public schema (keeps the migration journal). */
+/** Empties every table in the public schema and the outbox tables (keeps the migration journals). */
 export async function truncateAll(db: Database): Promise<void> {
-  const result = await db.execute<{ tablename: string }>(
-    sql`SELECT tablename FROM pg_tables WHERE schemaname = 'public'`,
+  const result = await db.execute<{ schemaname: string; tablename: string }>(
+    sql`SELECT schemaname, tablename FROM pg_tables
+        WHERE schemaname = 'public'
+           OR (schemaname = 'nest_outbox' AND tablename <> 'migrations')`,
   );
-  const tables = result.rows.map((r) => `"public"."${r.tablename}"`);
+  const tables = result.rows.map((r) => `"${r.schemaname}"."${r.tablename}"`);
   if (tables.length)
     await db.execute(
       sql.raw(`TRUNCATE ${tables.join(', ')} RESTART IDENTITY CASCADE`),

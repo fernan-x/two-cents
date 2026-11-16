@@ -9,7 +9,20 @@ export class ApiError extends Error {
   constructor(
     readonly code: ErrorCode | 'NETWORK',
     readonly status: number,
-    readonly details: { retryAfterSeconds?: number; reason?: SessionEndReason; linkToken?: string; emailHint?: string } = {},
+    readonly details: {
+      retryAfterSeconds?: number;
+      reason?: SessionEndReason;
+      linkToken?: string;
+      emailHint?: string;
+      /** Spec 002: who sent an invitation that can no longer be used. */
+      inviterName?: string;
+      /** Spec 002: masked address of an email invitation for someone else. */
+      invitedEmailMasked?: string;
+      /** Spec 002: the budget the caller already belongs to. */
+      budgetId?: string;
+      /** Spec 002: the up-to-date resource on STALE_STATE. */
+      current?: unknown;
+    } = {},
   ) {
     super(code);
     this.name = 'ApiError';
@@ -42,7 +55,7 @@ export function setRefresher(fn: Refresher | null): void {
 }
 
 export async function apiRequest<S extends z.ZodType | undefined = undefined>(
-  method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
   path: string,
   options: RequestOptions<S> = {},
 ): Promise<S extends z.ZodType ? z.infer<S> : undefined> {
@@ -92,6 +105,6 @@ async function toApiError(response: Response): Promise<ApiError> {
   const json = await response.json().catch(() => null);
   const parsed = ApiErrorSchema.safeParse(json);
   if (!parsed.success) return new ApiError('INTERNAL', response.status);
-  const { error, retryAfterSeconds, reason, linkToken, emailHint } = parsed.data;
-  return new ApiError(error, response.status, { retryAfterSeconds, reason, linkToken, emailHint });
+  const { error, ...details } = parsed.data;
+  return new ApiError(error, response.status, details);
 }

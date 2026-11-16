@@ -9,6 +9,7 @@ import { useAuth } from '../auth-store';
 import { errorMessage } from '../error-message';
 import { useAppleSignIn } from './use-apple-sign-in';
 import { useGoogleSignIn } from './use-google-sign-in';
+import { signUpPrompt } from '@/features/budgets/pending-invite';
 
 /** Apple / Google sign-in buttons' behaviour, shared by the welcome and sign-up screens. */
 export function useProviderSignIn() {
@@ -36,6 +37,8 @@ export function useProviderSignIn() {
         result = await authApi.google({ idToken, locale });
       }
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      // A provider sign-in without any budget is treated as a new account (FR-016a).
+      if (!result.me.hasBudget) signUpPrompt.mark();
       await auth.acceptAuthResult(result);
     } catch (e) {
       if (e instanceof ApiError && e.code === 'LINK_REQUIRED' && e.details.linkToken) {

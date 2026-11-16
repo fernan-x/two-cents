@@ -1,3 +1,5 @@
+import { unregisterPush } from '@/notifications/push-registration';
+
 import { apiRequest } from './api-client';
 import { useAuth } from './auth-store';
 
@@ -5,6 +7,7 @@ import { useAuth } from './auth-store';
 export function useSignOut() {
   const auth = useAuth();
   return async () => {
+    await unregisterPush();
     try {
       await apiRequest('POST', '/v1/auth/logout');
     } catch {

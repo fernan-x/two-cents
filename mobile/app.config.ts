@@ -42,7 +42,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           {
             action: 'VIEW',
             autoVerify: true,
-            data: [{ scheme: 'https', host: linkHost, pathPrefix: '/l/' }],
+            data: [
+              { scheme: 'https', host: linkHost, pathPrefix: '/l/' },
+              { scheme: 'https', host: linkHost, pathPrefix: '/i/' },
+            ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ]
@@ -70,6 +73,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-localization',
     'expo-sharing',
     'expo-apple-authentication',
+    'expo-notifications',
     [
       'expo-local-authentication',
       { faceIDPermission: "Two Cents utilise Face ID pour déverrouiller l'app." },
