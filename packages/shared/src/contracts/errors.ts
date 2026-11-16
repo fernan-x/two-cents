@@ -22,6 +22,26 @@ export const ErrorCode = z.enum([
   'NOT_PENDING',
   'NOT_FOUND',
   'INTERNAL',
+  // Spec 002
+  'EMAIL_NOT_CONFIRMED',
+  'BUDGET_NOT_FOUND',
+  'FORBIDDEN',
+  'STALE_STATE',
+  'INVALID_BUDGET_NAME',
+  'CURRENCY_LOCKED',
+  'CONFIRM_NAME_MISMATCH',
+  'CANNOT_MODIFY_OWNER',
+  'OWNER_MUST_TRANSFER',
+  'ALREADY_MEMBER',
+  'BUDGET_FULL',
+  'INVITATION_NOT_FOUND',
+  'INVITATION_WRONG_EMAIL',
+  'INVITATION_EXPIRED',
+  'INVITATION_REVOKED',
+  'INVITATION_DECLINED',
+  'INVITATION_USED',
+  'INVALID_AMOUNT',
+  'INVALID_MONTH',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
 
@@ -43,5 +63,13 @@ export const ApiError = z.object({
   reason: SessionEndReason.optional(),
   linkToken: z.string().optional(),
   emailHint: z.string().optional(),
+  /** Spec 002: who sent an invitation that is no longer usable. */
+  inviterName: z.string().optional(),
+  /** Spec 002: the masked address an invitation was sent to (INVITATION_WRONG_EMAIL). */
+  invitedEmailMasked: z.string().optional(),
+  /** Spec 002: the budget the caller already belongs to (ALREADY_MEMBER). */
+  budgetId: z.string().optional(),
+  /** Spec 002: the up-to-date resource on STALE_STATE. */
+  current: z.unknown().optional(),
 });
 export type ApiError = z.infer<typeof ApiError>;
