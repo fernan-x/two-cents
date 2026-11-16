@@ -159,7 +159,7 @@ description: "Task list for 001-user-accounts"
 - [X] T086 [P] [US1] Build the welcome screen (app name, "Créer un compte", "Se connecter", Sign in with Apple button only on iOS via `AppleAuthenticationButton`, Google button) in `mobile/src/app/(auth)/welcome.tsx`
 - [X] T087 [P] [US1] Build the sign-up screen (email, first name, password with live "10 caractères minimum" hint; server errors `EMAIL_IN_USE` with "Se connecter" / "Mot de passe oublié" actions, `PASSWORD_BREACHED`, `PASSWORD_TOO_SHORT`; haptic on success) in `mobile/src/app/(auth)/sign-up.tsx`
 - [X] T088 [P] [US1] Implement `useAppleSignIn` (requests `FULL_NAME` and `EMAIL`, sends `identityToken`, `authorizationCode`, first name only on first sign-in; ignores `ERR_REQUEST_CANCELED`) and `useGoogleSignIn` (`@react-native-google-signin/google-signin` configured with the web client ID, sends `idToken`) in `mobile/src/auth/providers/`
-- [X] T089 [US1] Build the link-account screen (shows `emailHint`, password option → `/auth/link/password`, "M'envoyer un lien" → `/auth/link/email` then "check your email" state) in `mobile/src/app/(auth)/link-account.tsx` and the link route `mobile/src/app/(links)/link.tsx` (reads `t`, calls `/auth/link/confirm`, signs in, `InvalidLinkScreen` on 410)
+- [X] T089 [US1] Build the link-account screen (shows `emailHint`, password option → `/auth/link/password`, "M'envoyer un lien" → `/auth/link/email` then "check your email" state) in `mobile/src/app/(auth)/link-account.tsx` and the link route `mobile/src/app/l/link.tsx` (reads `t`, calls `/auth/link/confirm`, signs in, `InvalidLinkScreen` on 410)
 - [X] T090 [US1] Route signed-in users with `me.hasBudget === false` to `(app)/onboarding/choose`; if spec 002 has not created it yet, add a placeholder `mobile/src/app/(app)/onboarding/choose.tsx` with "Créer un budget" and "J'ai un code d'invitation" buttons (actions wired by spec 002)
 - [X] T091 [US1] Add all US1 strings (fr, en) to `mobile/src/i18n/fr.json` and `mobile/src/i18n/en.json`
 
@@ -215,7 +215,7 @@ description: "Task list for 001-user-accounts"
 - [X] T110 [P] [US3] Add `ConfirmEmailMail` with templates `confirm-email.html` / `confirm-email.en.html` (link `${APP_LINK_BASE_URL}/l/confirm?t=<token>`, "valable 24 h") in `backend/src/identity/infrastructure/mail/`
 - [X] T111 [US3] Add routes `POST /v1/auth/email/confirm` and `POST /v1/auth/email/resend-confirmation` (AuthGuard, `@AuthThrottle()`) to `backend/src/identity/presentation/http/auth.controller.ts`
 - [X] T112 [P] [US3] Serve `/.well-known/apple-app-site-association` (paths `/l/*`, `/i/*`) and `/.well-known/assetlinks.json` from `backend/src/shared-kernel/infrastructure/well-known/well-known.controller.ts`, outside the `v1` prefix, plus a static FR/EN "open the app" page for `/l/*` that never consumes the token
-- [X] T113 [P] [US3] Build `mobile/src/app/(links)/confirm.tsx` (reads `t`, calls `/auth/email/confirm`, success state, `InvalidLinkScreen` with "Renvoyer l'e-mail" on 410)
+- [X] T113 [P] [US3] Build `mobile/src/app/l/confirm.tsx` (reads `t`, calls `/auth/email/confirm`, success state, `InvalidLinkScreen` with "Renvoyer l'e-mail" on 410)
 - [X] T114 [P] [US3] Build the "email not confirmed" banner with "Renvoyer" (rate-limit message) in `mobile/src/components/unconfirmed-email-banner.tsx`, shown on the settings index and onboarding screen
 - [X] T115 [US3] Add `requireConfirmedEmail()` guard hook (shows "Confirmez votre e-mail pour inviter ou rejoindre un budget" with resend) in `mobile/src/auth/require-confirmed-email.ts`, applied to the "J'ai un code d'invitation" action in `mobile/src/app/(app)/onboarding/choose.tsx` (spec 002 reuses it for invite actions; its API returns 403 `email_not_confirmed`)
 - [X] T116 [US3] Add US3 strings (fr, en) to `mobile/src/i18n/fr.json` and `mobile/src/i18n/en.json`
@@ -242,7 +242,7 @@ description: "Task list for 001-user-accounts"
 - [X] T121 [P] [US4] Add `ResetPasswordMail` (`/l/reset?t=<token>`, "valable 1 h", "ignorez cet e-mail si ce n'est pas vous") and `PasswordChangedMail` (time, "all other devices were signed out") with fr/en templates in `backend/src/identity/infrastructure/mail/`
 - [X] T122 [US4] Add routes `POST /v1/auth/password/forgot` (`@AuthThrottle()`, always 202) and `POST /v1/auth/password/reset` to `backend/src/identity/presentation/http/auth.controller.ts`
 - [X] T123 [P] [US4] Build `mobile/src/app/(auth)/forgot-password.tsx` (email field, same confirmation message whatever the result)
-- [X] T124 [P] [US4] Build `mobile/src/app/(links)/reset.tsx` (new password + policy hint, success → login screen, `InvalidLinkScreen` with "Demander un nouveau lien" on 410)
+- [X] T124 [P] [US4] Build `mobile/src/app/l/reset.tsx` (new password + policy hint, success → login screen, `InvalidLinkScreen` with "Demander un nouveau lien" on 410)
 - [X] T125 [US4] Add US4 strings (fr, en) to `mobile/src/i18n/fr.json` and `mobile/src/i18n/en.json`
 
 **Checkpoint**: Password reset works end to end
@@ -350,7 +350,7 @@ description: "Task list for 001-user-accounts"
 - [X] T165 [US8] Add routes `GET /v1/me/export` (throttle 1/min), `GET /v1/me/deletion/preview`, `DELETE /v1/me`, `POST /v1/me/deletion/cancel` (`@AllowPendingDeletion()`) and `POST /v1/me/deletion/cancel-by-link` in `backend/src/identity/presentation/http/me.controller.ts`
 - [X] T166 [P] [US8] Build `mobile/src/app/(app)/settings/export.tsx` (download the ZIP with `expo-file-system` to the cache directory, open the share sheet with `expo-sharing`, progress and error states)
 - [X] T167 [US8] Build `mobile/src/app/(app)/settings/delete-account.tsx` (preview of budgets deleted/left and the 7-day window, "Exporter d'abord" shortcut, re-authentication via password or Apple/Google → `reauthToken`, explicit "Supprimer mon compte" confirmation, then sign out to welcome)
-- [X] T168 [P] [US8] Build `mobile/src/app/pending-deletion.tsx` (deletion date, "Annuler la suppression" → `/me/deletion/cancel`, "Se déconnecter") and `mobile/src/app/(links)/cancel-deletion.tsx` (reads `t`, calls `/me/deletion/cancel-by-link`, `InvalidLinkScreen` on 410)
+- [X] T168 [P] [US8] Build `mobile/src/app/pending-deletion.tsx` (deletion date, "Annuler la suppression" → `/me/deletion/cancel`, "Se déconnecter") and `mobile/src/app/l/cancel-deletion.tsx` (reads `t`, calls `/me/deletion/cancel-by-link`, `InvalidLinkScreen` on 410)
 - [X] T169 [US8] Add US8 strings (fr, en) to `mobile/src/i18n/fr.json` and `mobile/src/i18n/en.json`
 
 **Checkpoint**: All user stories independently functional

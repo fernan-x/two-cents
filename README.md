@@ -58,6 +58,18 @@ Optional sign-in providers:
 - **Apple**: real iPhone or signed-in simulator, plus the `APPLE_*` values in `backend/.env`.
 - **Face ID / fingerprint**: real device only.
 
+### Email links in Expo Go
+
+Emails link to `APP_LINK_BASE_URL` + `/l/<screen>?t=<token>`. Expo Go only opens `exp://` links, so for Expo Go set in `backend/.env` (then restart the backend):
+
+```bash
+APP_LINK_BASE_URL=exp://<your computer's LAN IP>:8081/--
+```
+
+New emails then contain links such as `exp://192.168.1.26:8081/--/l/confirm?t=…`. Open the email (Mailpit) on the phone, or send yourself the link, and tap it: Expo Go opens the right screen. For a link you already have, replace `twocents://` with `exp://<LAN IP>:8081/--/`.
+
+In a development or production build, keep `twocents://` (dev) or the https link domain (production).
+
 ### 3. Tests
 
 ```bash

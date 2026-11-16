@@ -64,7 +64,7 @@ function RootNavigator() {
       <Stack.Protected guard={auth.status === 'signedOut'}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
-      <Stack.Screen name="(links)" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="l" options={{ presentation: 'modal' }} />
     </Stack>
       </View>
       {locked ? <LockScreen /> : null}

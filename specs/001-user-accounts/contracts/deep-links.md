@@ -6,10 +6,10 @@ Base URL: `APP_LINK_BASE_URL` (production: an HTTPS domain configured for iOS Un
 
 | Purpose | URL | App route (Expo Router) | Calls | Validity |
 |---|---|---|---|---|
-| Confirm email | `/l/confirm?t=<token>` | `src/app/(links)/confirm.tsx` | `POST /v1/auth/email/confirm` | 24 h, single use |
-| Reset password | `/l/reset?t=<token>` | `src/app/(links)/reset.tsx` | `POST /v1/auth/password/reset` | 1 h, single use, superseded by newer |
-| Link account | `/l/link?t=<token>` | `src/app/(links)/link.tsx` | `POST /v1/auth/link/confirm` | 1 h, single use |
-| Cancel deletion | `/l/cancel-deletion?t=<token>` | `src/app/(links)/cancel-deletion.tsx` | `POST /v1/me/deletion/cancel-by-link` | until scheduled deletion |
+| Confirm email | `/l/confirm?t=<token>` | `src/app/l/confirm.tsx` | `POST /v1/auth/email/confirm` | 24 h, single use |
+| Reset password | `/l/reset?t=<token>` | `src/app/l/reset.tsx` | `POST /v1/auth/password/reset` | 1 h, single use, superseded by newer |
+| Link account | `/l/link?t=<token>` | `src/app/l/link.tsx` | `POST /v1/auth/link/confirm` | 1 h, single use |
+| Cancel deletion | `/l/cancel-deletion?t=<token>` | `src/app/l/cancel-deletion.tsx` | `POST /v1/me/deletion/cancel-by-link` | until scheduled deletion |
 
 - The token is read from the URL and sent in the request **body**, never logged.
 - If the app is not installed, the HTTPS domain serves a static page (FR/EN) asking the user to install/open Two Cents. It does not consume the token.

@@ -144,7 +144,7 @@ mobile/
     ├── app/
     │   ├── _layout.tsx             # CHANGED: auth gate, lock overlay, QueryClient, i18n
     │   ├── (auth)/                 # welcome, sign-up, login, forgot-password, link-account
-    │   ├── (links)/                # confirm, reset, link, cancel-deletion
+    │   ├── l/                      # email links: /l/confirm, /l/reset, /l/link, /l/cancel-deletion
     │   ├── (app)/onboarding/       # owned by spec 002: choose.tsx (create or join), join-code.tsx; 001 routes users without a budget here
     │   ├── (app)/settings/         # profile, security (biometrics), sessions, export, delete-account
     │   └── pending-deletion.tsx
