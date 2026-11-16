@@ -1,0 +1,5 @@
+{
+  "ios": {
+    "NSFaceIDUsageDescription": "Two Cents utilise Face ID pour déverrouiller l'app."
+  }
+}
