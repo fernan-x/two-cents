@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { TurboModuleRegistry } from 'react-native';
+import { Platform, TurboModuleRegistry } from 'react-native';
 
 import { config } from '@/config';
 
@@ -14,7 +14,8 @@ let googleModule: GoogleSignInModule | null | undefined;
 function loadGoogleSignIn(): GoogleSignInModule | null {
   if (googleModule !== undefined) return googleModule;
   googleModule = null;
-  if (TurboModuleRegistry.get('RNGoogleSignin')) {
+  // Native only: there is no TurboModuleRegistry on web.
+  if (Platform.OS !== 'web' && TurboModuleRegistry?.get?.('RNGoogleSignin')) {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     googleModule = require('@react-native-google-signin/google-signin') as GoogleSignInModule;
     // The backend verifies the ID token against the web client ID (research R9).

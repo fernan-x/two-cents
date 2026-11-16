@@ -25,6 +25,8 @@ export interface RequestOptions<S extends z.ZodType | undefined> {
   retried?: boolean;
 }
 
+const REQUEST_TIMEOUT_MS = 15_000;
+
 type Refresher = () => Promise<boolean>;
 let refresher: Refresher | null = null;
 let onSessionEnded: ((reason: SessionEndReason | undefined) => void) | null = null;
@@ -50,14 +52,20 @@ export async function apiRequest<S extends z.ZodType | undefined = undefined>(
   if (token) headers.Authorization = `Bearer ${token}`;
 
   let response: Response;
+  // Without a timeout, a wrong API address leaves screens loading forever.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     response = await fetch(`${config.apiUrl}${path}`, {
       method,
       headers,
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      signal: controller.signal,
     });
   } catch {
     throw new ApiError('NETWORK', 0);
+  } finally {
+    clearTimeout(timeout);
   }
 
   if (response.status === 401 && options.auth !== false && !options.retried && refresher) {

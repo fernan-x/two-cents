@@ -25,6 +25,8 @@ export const envSchema = z.object({
   APPLE_PRIVATE_KEY: z.string().default(''),
   APPLE_BUNDLE_ID: z.string().default(''),
   GOOGLE_WEB_CLIENT_ID: z.string().default(''),
+  /** Comma-separated browser origins allowed to call the API (e.g. the Expo web dev server). Empty = none. */
+  CORS_ORIGINS: z.string().default(''),
   /** SHA-256 fingerprint of the Android signing certificate, for App Links. */
   ANDROID_CERT_SHA256: z.string().default(''),
 });

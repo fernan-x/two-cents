@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 // Secrets live only in the Keychain / Keystore, never in AsyncStorage (constitution Principle III).
 const REFRESH_TOKEN = 'refresh_token';
@@ -13,13 +14,31 @@ export interface LockSettings {
   requireOnEveryOpen: boolean;
 }
 
+/**
+ * The web has no Keychain/Keystore. Rather than put tokens in localStorage, web keeps them in memory:
+ * the session is lost on reload, which is acceptable for a development preview.
+ */
+const memory = new Map<string, string>();
+const store =
+  Platform.OS === 'web'
+    ? {
+        getItemAsync: (key: string) => Promise.resolve(memory.get(key) ?? null),
+        setItemAsync: (key: string, value: string) => Promise.resolve(void memory.set(key, value)),
+        deleteItemAsync: (key: string) => Promise.resolve(void memory.delete(key)),
+      }
+    : {
+        getItemAsync: (key: string) => SecureStore.getItemAsync(key, options),
+        setItemAsync: (key: string, value: string) => SecureStore.setItemAsync(key, value, options),
+        deleteItemAsync: (key: string) => SecureStore.deleteItemAsync(key, options),
+      };
+
 export const secureStorage = {
-  getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN, options),
-  setRefreshToken: (token: string) => SecureStore.setItemAsync(REFRESH_TOKEN, token, options),
-  clearRefreshToken: () => SecureStore.deleteItemAsync(REFRESH_TOKEN, options),
+  getRefreshToken: () => store.getItemAsync(REFRESH_TOKEN),
+  setRefreshToken: (token: string) => store.setItemAsync(REFRESH_TOKEN, token),
+  clearRefreshToken: () => store.deleteItemAsync(REFRESH_TOKEN),
 
   async getLockSettings(): Promise<LockSettings> {
-    const raw = await SecureStore.getItemAsync(LOCK_SETTINGS, options);
+    const raw = await store.getItemAsync(LOCK_SETTINGS);
     if (!raw) return { biometricEnabled: false, requireOnEveryOpen: false };
     try {
       return JSON.parse(raw) as LockSettings;
@@ -27,7 +46,6 @@ export const secureStorage = {
       return { biometricEnabled: false, requireOnEveryOpen: false };
     }
   },
-  setLockSettings: (settings: LockSettings) =>
-    SecureStore.setItemAsync(LOCK_SETTINGS, JSON.stringify(settings), options),
-  clearLockSettings: () => SecureStore.deleteItemAsync(LOCK_SETTINGS, options),
+  setLockSettings: (settings: LockSettings) => store.setItemAsync(LOCK_SETTINGS, JSON.stringify(settings)),
+  clearLockSettings: () => store.deleteItemAsync(LOCK_SETTINGS),
 };
