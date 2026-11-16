@@ -1,0 +1,10 @@
+packages:
+  - backend
+  - mobile
+  - packages/*
+
+onlyBuiltDependencies:
+  - argon2
+  - '@swc/core'
+  - esbuild
+  - '@parcel/watcher'
