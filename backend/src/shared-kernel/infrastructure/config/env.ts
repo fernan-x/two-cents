@@ -29,6 +29,13 @@ export const envSchema = z.object({
   CORS_ORIGINS: z.string().default(''),
   /** SHA-256 fingerprint of the Android signing certificate, for App Links. */
   ANDROID_CERT_SHA256: z.string().default(''),
+  /** HMAC key for invitation codes: only the HMAC of a code is stored (spec 002 R6). */
+  INVITE_CODE_SECRET: z.string().min(32),
+  /** Store links on the public invitation page (spec 002 FR-016). */
+  APP_STORE_URL: z.string().default('https://apps.apple.com/'),
+  PLAY_STORE_URL: z.string().default('https://play.google.com/store/apps'),
+  /** Optional Expo access token for push sending (enhanced push security). */
+  EXPO_ACCESS_TOKEN: z.string().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;

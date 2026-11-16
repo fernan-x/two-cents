@@ -10,13 +10,15 @@ export function configureApp(
 ): void {
   app.useLogger(app.get(Logger));
   (app as NestExpressApplication).set('trust proxy', options.trustProxy);
-  app.setGlobalPrefix('v1', { exclude: ['.well-known/{*path}', 'l/{*path}'] });
+  app.setGlobalPrefix('v1', {
+    exclude: ['.well-known/{*path}', 'l/{*path}', 'i/{*path}'],
+  });
   app.useGlobalFilters(new DomainErrorFilter());
   if (options.corsOrigins?.length) {
     // Bearer tokens only, no cookies: credentials stay off.
     app.enableCors({
       origin: options.corsOrigins,
-      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     });
   }
   app.enableShutdownHooks();
