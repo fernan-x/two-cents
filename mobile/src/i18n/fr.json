@@ -1,0 +1,193 @@
+{
+  "common": {
+    "appName": "Two Cents",
+    "continue": "Continuer",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "offline": "Pas de connexion. Réessayez une fois en ligne."
+  },
+  "links": {
+    "invalidTitle": "Ce lien n'est plus valide",
+    "invalidBody": "Il a expiré ou a déjà été utilisé."
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Certaines informations ne sont pas valides.",
+    "RATE_LIMITED": "Trop de tentatives. Réessayez dans une minute.",
+    "UNAUTHENTICATED": "Veuillez vous connecter.",
+    "EMAIL_IN_USE": "Cette adresse e-mail est déjà utilisée.",
+    "PASSWORD_TOO_SHORT": "Le mot de passe doit contenir au moins 10 caractères.",
+    "PASSWORD_BREACHED": "Ce mot de passe est trop courant ou est apparu dans une fuite de données. Choisissez-en un autre.",
+    "ACCOUNT_PENDING_DELETION": "Ce compte est en cours de suppression.",
+    "INVALID_CREDENTIALS": "E-mail ou mot de passe incorrect.",
+    "ACCOUNT_LOCKED": "Trop d'essais. Réessayez dans {{minutes}} min ou réinitialisez votre mot de passe.",
+    "INVALID_PROVIDER_TOKEN": "La connexion n'a pas abouti. Réessayez.",
+    "LINK_REQUIRED": "Un compte existe déjà avec cet e-mail.",
+    "LINK_EXPIRED": "Cette demande a expiré. Recommencez la connexion.",
+    "SESSION_ENDED": "Votre session est terminée. Reconnectez-vous.",
+    "TOKEN_INVALID": "Ce lien n'est plus valide.",
+    "ALREADY_CONFIRMED": "Votre e-mail est déjà confirmé.",
+    "REAUTH_REQUIRED": "Confirmez votre identité pour continuer.",
+    "CANNOT_REVOKE_CURRENT": "Utilisez « Se déconnecter » pour cet appareil.",
+    "NOT_PENDING": "Aucune suppression en cours.",
+    "NOT_FOUND": "Introuvable.",
+    "INTERNAL": "Une erreur est survenue. Réessayez.",
+    "NETWORK": "Impossible de joindre le serveur. Vérifiez votre connexion."
+  },
+  "auth": {
+    "tagline": "Le budget du foyer, à deux.",
+    "createAccount": "Créer un compte",
+    "signIn": "Se connecter",
+    "signUpTitle": "Créer un compte",
+    "email": "E-mail",
+    "firstName": "Prénom",
+    "firstNameHint": "Visible par les membres de votre foyer.",
+    "password": "Mot de passe",
+    "passwordHint": "Au moins {{count}} caractères.",
+    "forgotPassword": "Mot de passe oublié ?",
+    "continueWithGoogle": "Continuer avec Google",
+    "link": {
+      "title": "Ce compte existe déjà",
+      "body": "Un compte Two Cents utilise déjà {{email}}. Prouvez que c’est le vôtre pour vous connecter aussi avec {{provider}}.",
+      "passwordLabel": "Mot de passe de ce compte",
+      "withPassword": "Associer {{provider}}",
+      "withEmail": "M’envoyer un lien par e-mail",
+      "emailSent": "Lien envoyé à {{email}}. Ouvrez-le sur ce téléphone dans l’heure."
+    },
+    "sessionEnded": {
+      "logout": "Vous êtes déconnecté.",
+      "revoked_by_user": "Cet appareil a été déconnecté depuis un autre appareil.",
+      "password_changed": "Votre mot de passe a changé. Reconnectez-vous.",
+      "reuse_detected": "Par sécurité, votre session a été fermée. Reconnectez-vous.",
+      "provider_revoked": "L’accès via Apple a été retiré. Reconnectez-vous.",
+      "account_deletion": "Ce compte a été supprimé.",
+      "expired": "Votre session a expiré. Reconnectez-vous."
+    }
+  },
+  "onboarding": {
+    "title": "Bienvenue {{name}} !",
+    "subtitle": "Pour commencer, créez un budget ou rejoignez celui de votre foyer.",
+    "createBudget": "Créer un budget",
+    "joinWithCode": "J’ai un code d’invitation",
+    "comingSoon": "Les budgets partagés arrivent bientôt."
+  },
+  "settings": {
+    "title": "Réglages",
+    "signOut": "Se déconnecter"
+  },
+  "confirm": {
+    "banner": "Confirmez votre e-mail ({{email}}) pour inviter quelqu’un ou rejoindre un budget.",
+    "resend": "Renvoyer l’e-mail",
+    "sent": "E-mail envoyé. Pensez à vérifier vos spams.",
+    "doneTitle": "E-mail confirmé",
+    "doneBody": "Vous pouvez maintenant inviter quelqu’un ou rejoindre un budget partagé.",
+    "requiredToJoin": "Confirmez votre e-mail pour inviter ou rejoindre un budget."
+  },
+  "reset": {
+    "forgotTitle": "Mot de passe oublié",
+    "forgotBody": "Indiquez votre e-mail : nous vous enverrons un lien valable 1 heure.",
+    "sendLink": "Envoyer le lien",
+    "sent": "Si un compte existe pour cette adresse, un e-mail vient de partir. Le lien est valable 1 heure.",
+    "newTitle": "Nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "save": "Enregistrer",
+    "doneTitle": "Mot de passe modifié",
+    "doneBody": "Tous vos appareils ont été déconnectés. Connectez-vous avec votre nouveau mot de passe.",
+    "newLink": "Demander un nouveau lien"
+  },
+  "lock": {
+    "title": "Two Cents est verrouillée",
+    "subtitle": "Déverrouillez pour voir vos comptes, {{name}}.",
+    "prompt": "Déverrouiller Two Cents",
+    "enablePrompt": "Activer le déverrouillage",
+    "useBiometrics": "Déverrouiller avec Face ID / empreinte",
+    "password": "Mot de passe de votre compte",
+    "unlock": "Déverrouiller",
+    "withApple": "Continuer avec Apple",
+    "withGoogle": "Continuer avec Google",
+    "offlineNote": "Le déverrouillage par mot de passe nécessite une connexion.",
+    "enrolmentChanged": "Vos données biométriques ont changé : déverrouillez avec votre mot de passe, puis réactivez Face ID / empreinte dans les réglages.",
+    "settingsTitle": "Verrouillage",
+    "biometricToggle": "Déverrouiller avec Face ID / empreinte",
+    "biometricHint": "Au lieu de retaper votre mot de passe.",
+    "everyOpenToggle": "Exiger à chaque ouverture",
+    "everyOpenHint": "Utile sur un téléphone partagé : l’app se verrouille après 30 secondes en arrière-plan.",
+    "unavailable": "Aucune biométrie configurée sur cet appareil.",
+    "enableFailed": "La vérification biométrique a échoué. Réessayez."
+  },
+  "profile": {
+    "title": "Profil",
+    "nameRequired": "Indiquez un prénom (50 caractères max).",
+    "avatar": "Avatar",
+    "color": "Couleur",
+    "language": "Langue",
+    "currency": "Devise préférée",
+    "currencyHint": "Proposée par défaut pour vos nouveaux budgets.",
+    "save": "Enregistrer",
+    "languages": {
+      "fr": "Français",
+      "en": "English"
+    },
+    "avatars": {
+      "initials": "Initiale",
+      "leaf": "Feuille",
+      "sun": "Soleil",
+      "moon": "Lune",
+      "star": "Étoile",
+      "heart": "Cœur",
+      "coffee": "Café",
+      "house": "Maison"
+    },
+    "colors": {
+      "blue": "Bleu",
+      "green": "Vert",
+      "orange": "Orange",
+      "purple": "Violet",
+      "pink": "Rose",
+      "teal": "Turquoise",
+      "red": "Rouge",
+      "yellow": "Jaune"
+    }
+  },
+  "sessions": {
+    "title": "Appareils connectés",
+    "thisDevice": "Cet appareil",
+    "signedIn": "connecté le {{date}}",
+    "lastActive": "Dernière activité : {{date}}",
+    "signOutDevice": "Déconnecter",
+    "signOutOthers": "Déconnecter tous les autres appareils",
+    "confirmOthers_one": "{{count}} autre appareil sera déconnecté.",
+    "confirmOthers_other": "{{count}} autres appareils seront déconnectés.",
+    "platform": {
+      "ios": "iPhone / iPad",
+      "android": "Android",
+      "web": "Web"
+    }
+  },
+  "export": {
+    "title": "Exporter mes données",
+    "body": "Téléchargez toutes vos données : profil, connexions, appareils et budgets, en JSON et en CSV.",
+    "action": "Exporter",
+    "limit": "Un export par minute au maximum."
+  },
+  "deletion": {
+    "title": "Supprimer mon compte",
+    "when": "Votre compte sera supprimé définitivement le {{date}}. D’ici là, vous pourrez annuler en vous reconnectant ou depuis l’e-mail reçu.",
+    "budgetsDeleted": "Budgets supprimés (vous en êtes le seul membre) :",
+    "budgetsLeft": "Budgets que vous quitterez :",
+    "formerMember": "Vos opérations dans les budgets partagés restent, affichées comme « ancien membre ».",
+    "exportFirst": "Exporter mes données d’abord",
+    "confirmIdentity": "Confirmez votre identité",
+    "confirm": "Supprimer mon compte",
+    "confirmWithApple": "Confirmer avec Apple et supprimer",
+    "confirmWithGoogle": "Confirmer avec Google et supprimer",
+    "pendingTitle": "Suppression programmée",
+    "pendingBody": "Votre compte sera supprimé le {{date}}. Vous pouvez encore annuler.",
+    "cancel": "Annuler la suppression",
+    "cancelledTitle": "Suppression annulée",
+    "cancelledBody": "Votre compte est rétabli. Connectez-vous pour continuer."
+  }
+}
