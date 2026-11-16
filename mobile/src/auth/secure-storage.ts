@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 // Secrets live only in the Keychain / Keystore, never in AsyncStorage (constitution Principle III).
 const REFRESH_TOKEN = 'refresh_token';
 const LOCK_SETTINGS = 'lock_settings';
+const PENDING_INVITE = 'pending_invite_code';
 
 const options: SecureStore.SecureStoreOptions = {
   keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
@@ -48,4 +49,9 @@ export const secureStorage = {
   },
   setLockSettings: (settings: LockSettings) => store.setItemAsync(LOCK_SETTINGS, JSON.stringify(settings)),
   clearLockSettings: () => store.deleteItemAsync(LOCK_SETTINGS),
+
+  /** Spec 002 FR-015: an invitation code opened while signed out, kept through sign-up. */
+  getPendingInvite: () => store.getItemAsync(PENDING_INVITE),
+  setPendingInvite: (code: string) => store.setItemAsync(PENDING_INVITE, code),
+  clearPendingInvite: () => store.deleteItemAsync(PENDING_INVITE),
 };

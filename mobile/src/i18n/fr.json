@@ -35,7 +35,26 @@
     "NOT_PENDING": "Aucune suppression en cours.",
     "NOT_FOUND": "Introuvable.",
     "INTERNAL": "Une erreur est survenue. Réessayez.",
-    "NETWORK": "Impossible de joindre le serveur. Vérifiez votre connexion."
+    "NETWORK": "Impossible de joindre le serveur. Vérifiez votre connexion.",
+    "EMAIL_NOT_CONFIRMED": "Confirmez d’abord votre adresse e-mail.",
+    "BUDGET_NOT_FOUND": "Ce budget n’est plus disponible.",
+    "FORBIDDEN": "Votre rôle ne permet pas cette action.",
+    "STALE_STATE": "Quelqu’un vient de modifier ce budget. L’écran est à jour, réessayez.",
+    "INVALID_BUDGET_NAME": "Donnez un nom de 1 à 60 caractères.",
+    "CURRENCY_LOCKED": "La devise ne peut plus changer : des montants existent déjà.",
+    "CONFIRM_NAME_MISMATCH": "Le nom saisi ne correspond pas exactement.",
+    "CANNOT_MODIFY_OWNER": "Le rôle du propriétaire ne peut pas être modifié.",
+    "OWNER_MUST_TRANSFER": "Transférez la propriété ou supprimez le budget avant de partir.",
+    "ALREADY_MEMBER": "Cette personne fait déjà partie du budget.",
+    "BUDGET_FULL": "Un budget compte 6 personnes au plus, invitations en attente comprises.",
+    "INVITATION_NOT_FOUND": "Ce code ne correspond à aucune invitation. Vérifiez-le.",
+    "INVITATION_WRONG_EMAIL": "Cette invitation a été envoyée à une autre adresse.",
+    "INVITATION_EXPIRED": "Cette invitation a expiré.",
+    "INVITATION_REVOKED": "Cette invitation n’est plus valide.",
+    "INVITATION_DECLINED": "Cette invitation a été refusée.",
+    "INVITATION_USED": "Cette invitation a déjà été utilisée.",
+    "INVALID_AMOUNT": "Saisissez un montant valide, par exemple 2 450,50.",
+    "INVALID_MONTH": "Ce mois n’est pas disponible."
   },
   "auth": {
     "tagline": "Le budget du foyer, à deux.",
@@ -71,8 +90,7 @@
     "title": "Bienvenue {{name}} !",
     "subtitle": "Pour commencer, créez un budget ou rejoignez celui de votre foyer.",
     "createBudget": "Créer un budget",
-    "joinWithCode": "J’ai un code d’invitation",
-    "comingSoon": "Les budgets partagés arrivent bientôt."
+    "joinWithCode": "J’ai un code d’invitation"
   },
   "settings": {
     "title": "Réglages",
@@ -189,5 +207,178 @@
     "cancel": "Annuler la suppression",
     "cancelledTitle": "Suppression annulée",
     "cancelledBody": "Votre compte est rétabli. Connectez-vous pour continuer."
+  },
+  "budgets": {
+    "roles": {
+      "owner": "Propriétaire",
+      "admin": "Admin",
+      "member": "Membre",
+      "viewer": "Lecteur"
+    },
+    "roleHelp": {
+      "admin": "Peut tout faire sauf supprimer le budget ou toucher au propriétaire.",
+      "member": "Prévoit et saisit les dépenses.",
+      "viewer": "Consulte sans rien modifier."
+    },
+    "formerMember": "ancien membre",
+    "anonymousFormerMember": "Ancien membre",
+    "me": "vous",
+    "month": "Mois en cours : {{start}} – {{end}}",
+    "monthPreview": "Mois en cours avec ce réglage : {{start}} – {{end}}",
+    "new": {
+      "title": "Créer un budget",
+      "name": "Nom du budget",
+      "namePlaceholder": "Maison Maëlle & Fabien",
+      "currency": "Devise",
+      "startDay": "Le mois commence le",
+      "startDayHint": "Choisissez le jour de la paie, par exemple. Du 1er au 28.",
+      "startDayValue": "{{day}} du mois",
+      "submit": "Créer le budget",
+      "decrease": "Jour précédent",
+      "increase": "Jour suivant"
+    },
+    "home": {
+      "members": "Membres",
+      "settings": "Réglages du budget",
+      "switch": "Changer de budget",
+      "account": "Mon compte",
+      "incomeReminder": "Vous n’avez pas encore indiqué vos revenus de ce mois.",
+      "incomeReminderAction": "Indiquer mes revenus",
+      "noIncome": "revenus non indiqués"
+    },
+    "picker": {
+      "title": "Mes budgets",
+      "active": "actif",
+      "create": "Créer un budget",
+      "join": "Rejoindre avec un code",
+      "recentlyDeleted": "Récemment supprimés",
+      "deletedOn": "Supprimé le {{date}}, restaurable jusqu’au {{until}}",
+      "restore": "Restaurer",
+      "people": "{{count}} personne",
+      "people_other": "{{count}} personnes"
+    },
+    "join": {
+      "titleAfterSignUp": "Vous avez un code d’invitation ?",
+      "title": "Rejoindre un budget",
+      "subtitle": "Saisissez le code à 6 caractères reçu par message ou affiché sur la page d’invitation.",
+      "code": "Code d’invitation",
+      "submit": "Continuer",
+      "skip": "Passer"
+    },
+    "invitation": {
+      "title": "Invitation",
+      "invitedBy": "{{name}} vous invite",
+      "toBudget": "à rejoindre « {{budget}} »",
+      "role": "Rôle proposé : {{role}}",
+      "people": "{{count}} personne déjà dans ce budget",
+      "people_other": "{{count}} personnes déjà dans ce budget",
+      "expires": "Valable jusqu’au {{date}}",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "declined": "Invitation refusée.",
+      "expired": "Cette invitation a expiré. Demandez-en une nouvelle à {{name}}.",
+      "revoked": "Cette invitation n’est plus valide.",
+      "used": "Cette invitation a déjà été utilisée.",
+      "declinedGone": "Cette invitation a été refusée.",
+      "wrongEmail": "Cette invitation a été envoyée à {{email}}. Demandez à la personne qui vous invite de vous envoyer un code d’invitation à la place.",
+      "alreadyMember": "Vous faites déjà partie de ce budget.",
+      "openBudget": "Ouvrir le budget",
+      "notFound": "Ce code ne correspond à aucune invitation.",
+      "home": "Retour à l’accueil"
+    },
+    "income": {
+      "title": "Vos revenus du mois",
+      "subtitle": "Mois du {{start}} au {{end}}. Ils serviront à calculer la part de chacun.",
+      "amount": "Revenus nets du mois ({{currency}})",
+      "placeholder": "2 450,50",
+      "visibility": "Toutes les personnes du budget, lecteurs compris, verront ce montant.",
+      "save": "Enregistrer",
+      "skip": "Plus tard"
+    },
+    "members": {
+      "title": "Membres",
+      "invite": "Inviter quelqu’un",
+      "pending": "Invitations en attente",
+      "emailInvite": "{{email}}",
+      "codeInvite": "Invitation par code",
+      "sentOn": "envoyée le {{date}}",
+      "expiresOn": "expire le {{date}}",
+      "resend": "Renvoyer",
+      "revoke": "Révoquer",
+      "revokeConfirm": "Révoquer cette invitation ? Le lien et le code ne fonctionneront plus.",
+      "resent": "Invitation renvoyée. Nouveau code : {{code}}",
+      "former": "Anciens membres",
+      "leave": "Quitter le budget",
+      "leaveConfirm": "Quitter « {{budget}} » ? Vous n’y aurez plus accès.",
+      "ownerCannotLeave": "Transférez la propriété ou supprimez le budget pour partir.",
+      "history": "Historique",
+      "full": "6 personnes au plus, invitations comprises."
+    },
+    "invite": {
+      "title": "Inviter",
+      "byEmail": "Par e-mail",
+      "byCode": "Par code",
+      "email": "Adresse e-mail",
+      "role": "Rôle",
+      "send": "Envoyer l’invitation",
+      "generate": "Créer un code",
+      "sent": "Invitation envoyée à {{email}}.",
+      "resentInstead": "Une invitation était déjà en attente pour {{email}} : elle a été renvoyée.",
+      "code": "Code à partager",
+      "share": "Partager",
+      "shareMessage": "Rejoins notre budget « {{budget}} » sur Two Cents : {{link}} (code {{code}})",
+      "validity": "Valable 7 jours, pour une seule personne.",
+      "done": "Terminé"
+    },
+    "member": {
+      "role": "Rôle",
+      "remove": "Retirer du budget",
+      "removeConfirm": "Retirer {{name}} du budget ? Ses saisies restent dans l’historique.",
+      "transfer": "Transférer la propriété",
+      "transferConfirm": "Faire de {{name}} le propriétaire ? Vous deviendrez Admin.",
+      "confirm": "Confirmer",
+      "joined": "Membre depuis le {{date}}"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "Aucun événement.",
+      "more": "Voir plus",
+      "events": {
+        "budget_created": "{{actor}} a créé le budget",
+        "joined": "{{target}} a rejoint le budget",
+        "role_changed": "{{actor}} a changé le rôle de {{target}}",
+        "ownership_transferred": "{{target}} est devenu·e propriétaire",
+        "removed": "{{actor}} a retiré {{target}}",
+        "left": "{{target}} a quitté le budget",
+        "invitation_sent": "{{actor}} a envoyé une invitation",
+        "invitation_revoked": "{{actor}} a révoqué une invitation",
+        "settings_changed": "{{actor}} a modifié les réglages",
+        "budget_deleted": "{{actor}} a supprimé le budget",
+        "budget_restored": "{{actor}} a restauré le budget"
+      },
+      "someone": "Quelqu’un"
+    },
+    "settings": {
+      "title": "Réglages du budget",
+      "name": "Nom",
+      "startDay": "Le mois commence le",
+      "currency": "Devise",
+      "currencyLocked": "La devise ne peut plus changer : des montants existent.",
+      "save": "Enregistrer",
+      "saved": "Réglages enregistrés.",
+      "pendingStartDay": "Le {{day}} du mois s’appliquera à partir du {{date}}.",
+      "readOnly": "Seuls le propriétaire et les admins peuvent modifier ces réglages.",
+      "delete": "Supprimer le budget"
+    },
+    "delete": {
+      "title": "Supprimer le budget",
+      "explain": "Le budget disparaîtra pour tout le monde. Les membres seront prévenus. Vous pourrez le restaurer pendant 30 jours depuis « Mes budgets », puis il sera effacé définitivement.",
+      "typeName": "Saisissez « {{name}} » pour confirmer",
+      "confirm": "Supprimer définitivement"
+    },
+    "push": {
+      "title": "Notifications",
+      "ask": "Activer les notifications pour être prévenu·e des invitations et des changements du budget ?"
+    }
   }
 }

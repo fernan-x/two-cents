@@ -65,6 +65,8 @@ function RootNavigator() {
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
       <Stack.Screen name="l" options={{ presentation: 'modal' }} />
+      {/* Invitation links work signed in or out (FR-015). */}
+      <Stack.Screen name="i/[code]" />
     </Stack>
       </View>
       {locked ? <LockScreen /> : null}

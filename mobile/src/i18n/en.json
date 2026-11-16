@@ -35,7 +35,26 @@
     "NOT_PENDING": "No deletion in progress.",
     "NOT_FOUND": "Not found.",
     "INTERNAL": "Something went wrong. Try again.",
-    "NETWORK": "Can't reach the server. Check your connection."
+    "NETWORK": "Can't reach the server. Check your connection.",
+    "EMAIL_NOT_CONFIRMED": "Confirm your email address first.",
+    "BUDGET_NOT_FOUND": "This budget is no longer available.",
+    "FORBIDDEN": "Your role doesn’t allow this.",
+    "STALE_STATE": "Someone just changed this budget. The screen is up to date, try again.",
+    "INVALID_BUDGET_NAME": "Use a name of 1 to 60 characters.",
+    "CURRENCY_LOCKED": "The currency can no longer change: amounts already exist.",
+    "CONFIRM_NAME_MISMATCH": "The name doesn’t match exactly.",
+    "CANNOT_MODIFY_OWNER": "The owner’s role can’t be changed.",
+    "OWNER_MUST_TRANSFER": "Transfer ownership or delete the budget before leaving.",
+    "ALREADY_MEMBER": "This person is already in the budget.",
+    "BUDGET_FULL": "A budget has at most 6 people, pending invitations included.",
+    "INVITATION_NOT_FOUND": "This code doesn’t match any invitation. Check it.",
+    "INVITATION_WRONG_EMAIL": "This invitation was sent to another address.",
+    "INVITATION_EXPIRED": "This invitation has expired.",
+    "INVITATION_REVOKED": "This invitation is no longer valid.",
+    "INVITATION_DECLINED": "This invitation was declined.",
+    "INVITATION_USED": "This invitation was already used.",
+    "INVALID_AMOUNT": "Enter a valid amount, for example 2,450.50.",
+    "INVALID_MONTH": "This month isn’t available."
   },
   "auth": {
     "tagline": "Your household budget, together.",
@@ -71,8 +90,7 @@
     "title": "Welcome {{name}}!",
     "subtitle": "To start, create a budget or join your household’s.",
     "createBudget": "Create a budget",
-    "joinWithCode": "I have an invitation code",
-    "comingSoon": "Shared budgets are coming soon."
+    "joinWithCode": "I have an invitation code"
   },
   "settings": {
     "title": "Settings",
@@ -189,5 +207,178 @@
     "cancel": "Cancel the deletion",
     "cancelledTitle": "Deletion cancelled",
     "cancelledBody": "Your account is restored. Sign in to continue."
+  },
+  "budgets": {
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "roleHelp": {
+      "admin": "Can do everything except delete the budget or change the owner.",
+      "member": "Plans and records spending.",
+      "viewer": "Can see everything, changes nothing."
+    },
+    "formerMember": "former member",
+    "anonymousFormerMember": "Former member",
+    "me": "you",
+    "month": "Current month: {{start}} – {{end}}",
+    "monthPreview": "Current month with this setting: {{start}} – {{end}}",
+    "new": {
+      "title": "Create a budget",
+      "name": "Budget name",
+      "namePlaceholder": "Our home",
+      "currency": "Currency",
+      "startDay": "The month starts on",
+      "startDayHint": "Pick your payday, for example. From the 1st to the 28th.",
+      "startDayValue": "Day {{day}}",
+      "submit": "Create the budget",
+      "decrease": "Previous day",
+      "increase": "Next day"
+    },
+    "home": {
+      "members": "Members",
+      "settings": "Budget settings",
+      "switch": "Switch budget",
+      "account": "My account",
+      "incomeReminder": "You haven’t entered your income for this month yet.",
+      "incomeReminderAction": "Enter my income",
+      "noIncome": "income not entered"
+    },
+    "picker": {
+      "title": "My budgets",
+      "active": "active",
+      "create": "Create a budget",
+      "join": "Join with a code",
+      "recentlyDeleted": "Recently deleted",
+      "deletedOn": "Deleted on {{date}}, restorable until {{until}}",
+      "restore": "Restore",
+      "people": "{{count}} person",
+      "people_other": "{{count}} people"
+    },
+    "join": {
+      "titleAfterSignUp": "Got an invitation code?",
+      "title": "Join a budget",
+      "subtitle": "Enter the 6-character code you received or saw on the invitation page.",
+      "code": "Invitation code",
+      "submit": "Continue",
+      "skip": "Skip"
+    },
+    "invitation": {
+      "title": "Invitation",
+      "invitedBy": "{{name}} invited you",
+      "toBudget": "to join “{{budget}}”",
+      "role": "Role offered: {{role}}",
+      "people": "{{count}} person already in this budget",
+      "people_other": "{{count}} people already in this budget",
+      "expires": "Valid until {{date}}",
+      "accept": "Accept",
+      "decline": "Decline",
+      "declined": "Invitation declined.",
+      "expired": "This invitation has expired. Ask {{name}} for a new one.",
+      "revoked": "This invitation is no longer valid.",
+      "used": "This invitation was already used.",
+      "declinedGone": "This invitation was declined.",
+      "wrongEmail": "This invitation was sent to {{email}}. Ask the person who invited you to send you an invitation code instead.",
+      "alreadyMember": "You’re already in this budget.",
+      "openBudget": "Open the budget",
+      "notFound": "This code doesn’t match any invitation.",
+      "home": "Back to home"
+    },
+    "income": {
+      "title": "Your income this month",
+      "subtitle": "Month from {{start}} to {{end}}. It will be used to compute each person’s share.",
+      "amount": "Net income this month ({{currency}})",
+      "placeholder": "2,450.50",
+      "visibility": "Everyone in the budget, viewers included, will see this amount.",
+      "save": "Save",
+      "skip": "Later"
+    },
+    "members": {
+      "title": "Members",
+      "invite": "Invite someone",
+      "pending": "Pending invitations",
+      "emailInvite": "{{email}}",
+      "codeInvite": "Code invitation",
+      "sentOn": "sent on {{date}}",
+      "expiresOn": "expires on {{date}}",
+      "resend": "Resend",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke this invitation? The link and code will stop working.",
+      "resent": "Invitation resent. New code: {{code}}",
+      "former": "Former members",
+      "leave": "Leave the budget",
+      "leaveConfirm": "Leave “{{budget}}”? You will lose access.",
+      "ownerCannotLeave": "Transfer ownership or delete the budget to leave.",
+      "history": "History",
+      "full": "At most 6 people, invitations included."
+    },
+    "invite": {
+      "title": "Invite",
+      "byEmail": "By email",
+      "byCode": "By code",
+      "email": "Email address",
+      "role": "Role",
+      "send": "Send the invitation",
+      "generate": "Create a code",
+      "sent": "Invitation sent to {{email}}.",
+      "resentInstead": "An invitation was already pending for {{email}}: it was sent again.",
+      "code": "Code to share",
+      "share": "Share",
+      "shareMessage": "Join our budget “{{budget}}” on Two Cents: {{link}} (code {{code}})",
+      "validity": "Valid for 7 days, for one person.",
+      "done": "Done"
+    },
+    "member": {
+      "role": "Role",
+      "remove": "Remove from the budget",
+      "removeConfirm": "Remove {{name}} from the budget? Their entries stay in history.",
+      "transfer": "Transfer ownership",
+      "transferConfirm": "Make {{name}} the owner? You will become an Admin.",
+      "confirm": "Confirm",
+      "joined": "Member since {{date}}"
+    },
+    "history": {
+      "title": "History",
+      "empty": "Nothing yet.",
+      "more": "Show more",
+      "events": {
+        "budget_created": "{{actor}} created the budget",
+        "joined": "{{target}} joined the budget",
+        "role_changed": "{{actor}} changed {{target}}’s role",
+        "ownership_transferred": "{{target}} became the owner",
+        "removed": "{{actor}} removed {{target}}",
+        "left": "{{target}} left the budget",
+        "invitation_sent": "{{actor}} sent an invitation",
+        "invitation_revoked": "{{actor}} revoked an invitation",
+        "settings_changed": "{{actor}} changed the settings",
+        "budget_deleted": "{{actor}} deleted the budget",
+        "budget_restored": "{{actor}} restored the budget"
+      },
+      "someone": "Someone"
+    },
+    "settings": {
+      "title": "Budget settings",
+      "name": "Name",
+      "startDay": "The month starts on",
+      "currency": "Currency",
+      "currencyLocked": "The currency can no longer change: amounts exist.",
+      "save": "Save",
+      "saved": "Settings saved.",
+      "pendingStartDay": "Day {{day}} will apply from {{date}}.",
+      "readOnly": "Only the owner and admins can change these settings.",
+      "delete": "Delete the budget"
+    },
+    "delete": {
+      "title": "Delete the budget",
+      "explain": "The budget will disappear for everyone. Members will be told. You can restore it for 30 days from “My budgets”, then it is erased for good.",
+      "typeName": "Type “{{name}}” to confirm",
+      "confirm": "Delete for good"
+    },
+    "push": {
+      "title": "Notifications",
+      "ask": "Turn on notifications to hear about invitations and budget changes?"
+    }
   }
 }

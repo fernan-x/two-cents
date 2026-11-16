@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiError } from '@/auth/api-client';
 import { authApi } from '@/auth/auth-api';
 import { useAuth } from '@/auth/auth-store';
+import { signUpPrompt } from '@/features/budgets/pending-invite';
 import { errorMessage } from '@/auth/error-message';
 import { Button, ErrorBanner, FormScreen, PasswordField, TextField } from '@/components/form';
 import { ProviderButtons } from '@/components/provider-buttons';
@@ -38,6 +39,7 @@ export default function SignUp() {
         locale: i18n.language === 'en' ? 'en' : 'fr',
       });
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      signUpPrompt.mark();
       await auth.acceptAuthResult(result);
     } catch (e) {
       setError(e as Error);
