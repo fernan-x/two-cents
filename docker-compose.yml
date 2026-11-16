@@ -1,0 +1,33 @@
+# Local services for development and tests.
+# Host ports 5442/5443 avoid clashing with other Postgres instances on 5432.
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: two_cents
+      POSTGRES_PASSWORD: two_cents
+      POSTGRES_DB: two_cents
+    ports:
+      - "5442:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+  postgres-test:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: two_cents
+      POSTGRES_PASSWORD: two_cents
+      POSTGRES_DB: two_cents_test
+    ports:
+      - "5443:5432"
+    tmpfs:
+      - /var/lib/postgresql
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  postgres-data:
