@@ -2,6 +2,7 @@ import { onlineManager } from '@tanstack/react-query';
 import type { MonthDetail } from '@two-cents/shared/contracts';
 import { addNetworkStateListener, getNetworkStateAsync, type NetworkState } from 'expo-network';
 import { useSyncExternalStore } from 'react';
+import { Platform } from 'react-native';
 
 const isOnline = (state: NetworkState) => state.isConnected !== false && state.isInternetReachable !== false;
 
@@ -9,10 +10,12 @@ let installed = false;
 
 /**
  * Feeds the device's connectivity to TanStack Query (research R17): offline, queries pause and keep
- * their cached data, so a month stays readable. Safe to call more than once.
+ * their cached data, so a month stays readable. Native only; safe to call more than once.
  */
 export function setupOnlineManager(): void {
-  if (installed) return;
+  // On web TanStack Query already follows the browser's online/offline events, and expo-network's
+  // web module needs `window`, which does not exist during server rendering.
+  if (installed || Platform.OS === 'web') return;
   installed = true;
   onlineManager.setEventListener((setOnline) => {
     void getNetworkStateAsync()
@@ -28,6 +31,8 @@ export function useIsOnline(): boolean {
   return useSyncExternalStore(
     (onChange) => onlineManager.subscribe(onChange),
     () => onlineManager.isOnline(),
+    // Server rendering (web): assume online.
+    () => true,
   );
 }
 
