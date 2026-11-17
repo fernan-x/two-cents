@@ -15,7 +15,9 @@
       "default": "./dist/domain/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
@@ -28,13 +30,24 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.19.2",
+    "fast-check": "4.10.2",
     "jest": "^30.5.2",
     "ts-jest": "^29.4.15",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "jest": {
     "testEnvironment": "node",
-    "roots": ["<rootDir>/test"],
-    "transform": { "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.json" }] }
+    "roots": [
+      "<rootDir>/test"
+    ],
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.json"
+        }
+      ]
+    }
   }
 }

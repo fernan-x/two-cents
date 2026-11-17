@@ -10,6 +10,21 @@ export const LocalDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD');
 
 /** Exact money: an integer number of minor units sent as a string, never a float (Principle I). */
 export const AmountMinor = z.string().regex(/^\d{1,18}$/, 'integer number of minor units');
+/** A signed amount of minor units, e.g. a negative "what's left" (Principle I). */
+export const SignedAmountMinor = z.string().regex(/^-?\d{1,18}$/, 'signed integer number of minor units');
+
+/** Text trimmed and NFC-normalized, `min`–`max` characters (code points). */
+export const TrimmedText = (min: number, max: number) =>
+  z
+    .string()
+    .transform((s) => s.normalize('NFC').trim())
+    .pipe(
+      z
+        .string()
+        .refine((s) => [...s].length >= min, `at least ${min} characters`)
+        .refine((s) => [...s].length <= max, `at most ${max} characters`),
+    );
+
 export const Money = z.object({ amountMinor: AmountMinor, currency: CurrencyCode });
 export type Money = z.infer<typeof Money>;
 

@@ -21,3 +21,12 @@ export function parseAmount(input: string, currency: string): bigint | null {
   if (fraction.length > digits) return null;
   return BigInt(match[1] + fraction.padEnd(digits, '0'));
 }
+
+/** The largest amount accepted on a line or an income: 1 000 000,00 € (spec edge case). */
+export const MAX_AMOUNT_MINOR = 100_000_000n;
+
+/** `parseAmount`, also refusing anything above {@link MAX_AMOUNT_MINOR} (FR-026). */
+export function parseBoundedAmount(input: string, currency: string): bigint | null {
+  const amount = parseAmount(input, currency);
+  return amount === null || amount > MAX_AMOUNT_MINOR ? null : amount;
+}

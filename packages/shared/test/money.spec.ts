@@ -1,4 +1,4 @@
-import { minorDigits, parseAmount } from '../src/domain/money';
+import { MAX_AMOUNT_MINOR, minorDigits, parseAmount, parseBoundedAmount } from '../src/domain/money';
 
 describe('parseAmount (Principle I)', () => {
   it('accepts a comma or a dot as decimal separator', () => {
@@ -34,5 +34,24 @@ describe('parseAmount (Principle I)', () => {
     expect(minorDigits('JPY')).toBe(0);
     expect(parseAmount('1200', 'JPY')).toBe(1200n);
     expect(parseAmount('1200,5', 'JPY')).toBeNull();
+  });
+});
+
+
+describe('parseBoundedAmount (FR-026)', () => {
+  it('caps amounts at 1 000 000,00 €', () => {
+    expect(MAX_AMOUNT_MINOR).toBe(100_000_000n);
+    expect(parseBoundedAmount('1 000 000,00', 'EUR')).toBe(100_000_000n);
+    expect(parseBoundedAmount('1 000 000,01', 'EUR')).toBeNull();
+  });
+
+  it('accepts what parseAmount accepts', () => {
+    expect(parseBoundedAmount('12,5', 'EUR')).toBe(1250n);
+    expect(parseBoundedAmount('12.5', 'EUR')).toBe(1250n);
+    expect(parseBoundedAmount('1 234,56', 'EUR')).toBe(123456n);
+  });
+
+  it('refuses invalid input', () => {
+    for (const bad of ['-3', '12,5a', '12,555', '1,2,3', '']) expect(parseBoundedAmount(bad, 'EUR')).toBeNull();
   });
 });
