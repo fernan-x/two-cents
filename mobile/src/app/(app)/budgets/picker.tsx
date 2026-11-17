@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { errorMessage } from '@/auth/error-message';
 import { Button, ErrorBanner, FormScreen } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
+import { IconLabel } from '@/components/ui';
 import { MinTouchTarget, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { budgetsApi } from '@/features/budgets/api';
@@ -63,9 +64,7 @@ export default function BudgetPicker() {
               </ThemedText>
             </View>
             {active ? (
-              <ThemedText type="small" style={{ color: theme.primary }}>
-                ✓ {t('budgets.picker.active')}
-              </ThemedText>
+              <IconLabel icon="check" label={t('budgets.picker.active')} color={theme.primary} />
             ) : null}
           </Pressable>
         );

@@ -7,36 +7,57 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+/** Nestly palette (Figma "palette" frame). Dark values are derived — the file only ships light. */
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-    border: '#C9CCD3',
-    primary: '#2457D6',
+    text: '#16143A', // Ink
+    background: '#F7F7FC',
+    backgroundElement: '#FFFFFF', // cards
+    backgroundSelected: '#ECEBFF', // Tint
+    textSecondary: '#8583A3', // Muted
+    border: '#E6E5F2',
+    track: '#F1F0F7', // progress track
+    primary: '#625EFC',
+    primaryDark: '#4A45E0',
+    primaryLight: '#8C89FF',
+    tint: '#ECEBFF',
     onPrimary: '#FFFFFF',
-    danger: '#B3261E',
-    dangerBackground: '#FCE8E6',
-    success: '#1B7F3B',
-    warningBackground: '#FFF4D6',
-    warningText: '#5C4400',
+    hero: '#16143A', // dark summary card
+    onHero: '#FFFFFF',
+    danger: '#F0527A',
+    dangerBackground: '#FFE4EB',
+    success: '#14B886',
+    successBackground: '#DCF6EC',
+    warning: '#F5A524',
+    warningBackground: '#FDF0D9',
+    warningText: '#8A5A00',
+    info: '#2CA6EE',
+    infoBackground: '#DEF1FC',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-    border: '#3A3D42',
-    primary: '#8AB4FF',
-    onPrimary: '#0B1B3F',
-    danger: '#FFB4AB',
-    dangerBackground: '#3B1411',
-    success: '#7DD99A',
-    warningBackground: '#3A2F0B',
-    warningText: '#FFE08A',
+    text: '#F7F7FC',
+    background: '#0E0D24',
+    backgroundElement: '#1C1A3D',
+    backgroundSelected: '#2A2760',
+    textSecondary: '#A9A7C6',
+    border: '#2C2A52',
+    track: '#2C2A52',
+    primary: '#8C89FF',
+    primaryDark: '#625EFC',
+    primaryLight: '#B3B1FF',
+    tint: '#2A2760',
+    onPrimary: '#16143A',
+    hero: '#26236B',
+    onHero: '#FFFFFF',
+    danger: '#FF7D9C',
+    dangerBackground: '#3D1426',
+    success: '#3DD6A5',
+    successBackground: '#0F3A2E',
+    warning: '#FFBE55',
+    warningBackground: '#3A2C0B',
+    warningText: '#FFD98A',
+    info: '#5CC0FF',
+    infoBackground: '#0E2F45',
   },
 } as const;
 
@@ -82,10 +103,22 @@ export const MaxContentWidth = 800;
 
 export const Radius = {
   sm: 8,
-  md: 12,
-  lg: 20,
+  md: 13, // icon bubbles
+  lg: 24, // cards
+  xl: 28, // hero cards
   full: 999,
 } as const;
+
+/** Geist, loaded in the root layout. Custom fonts ignore `fontWeight` on Android, so pick the family per weight. */
+export const FontFamily = {
+  regular: 'Geist_400Regular',
+  medium: 'Geist_500Medium',
+  semibold: 'Geist_600SemiBold',
+  bold: 'Geist_700Bold',
+} as const;
+
+/** Soft indigo card shadow: 0 6 20 rgba(22,20,58,0.06). */
+export const CardShadow = { boxShadow: '0px 6px 20px rgba(22, 20, 58, 0.06)' } as const;
 
 /** Minimum touch target (constitution Principle VIII). */
 export const MinTouchTarget = 44;

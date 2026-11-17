@@ -3,11 +3,13 @@ import type { BudgetDetail } from '@two-cents/shared/contracts';
 import * as Haptics from 'expo-haptics';
 import { type Href, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { errorMessage } from '@/auth/error-message';
 import { Button, ErrorBanner, FormScreen, TextField } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
+import { IconLabel } from '@/components/ui';
 import { budgetsApi } from '@/features/budgets/api';
 import { DayStepper } from '@/features/budgets/components';
 import { formatDay } from '@/features/budgets/format';
@@ -101,7 +103,11 @@ export function SettingsForm({ budget }: { budget: BudgetDetail }) {
         hint={budget.currencyLocked ? t('budgets.settings.currencyLocked') : undefined}
       />
       <ErrorBanner message={save.error ? errorMessage(t, save.error) : null} />
-      {saved ? <ThemedText accessibilityLiveRegion="polite">✓ {t('budgets.settings.saved')}</ThemedText> : null}
+      {saved ? (
+        <View accessibilityLiveRegion="polite">
+          <IconLabel icon="check" label={t('budgets.settings.saved')} />
+        </View>
+      ) : null}
       {canEdit ? (
         <Button
           label={t('budgets.settings.save')}
