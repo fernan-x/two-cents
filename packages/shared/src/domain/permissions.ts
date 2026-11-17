@@ -12,6 +12,10 @@ export const PERMISSIONS = [
   'entries.write',
   'income.write.own',
   'membership.leave',
+  'months.create',
+  'months.activate',
+  'months.close',
+  'months.reopen',
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -26,6 +30,10 @@ const ALLOWED: Record<Permission, readonly Role[]> = {
   'entries.write': ['owner', 'admin', 'member'],
   'income.write.own': ['owner', 'admin', 'member'],
   'membership.leave': ['admin', 'member', 'viewer'],
+  'months.create': ['owner', 'admin', 'member'],
+  'months.activate': ['owner', 'admin', 'member'],
+  'months.close': ['owner', 'admin', 'member'],
+  'months.reopen': ['owner', 'admin'],
 };
 
 /** The permission matrix (FR-026, data-model.md), used by the API guard and to hide controls in the app. */

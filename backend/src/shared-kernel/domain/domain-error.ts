@@ -10,6 +10,12 @@ export interface DomainErrorDetails {
   invitedEmailMasked?: string;
   budgetId?: string;
   current?: unknown;
+  /** Spec 003 (SPLIT_MISMATCH): signed minor units as a string. */
+  differenceMinor?: string;
+  /** Spec 003 (LINES_NEED_REVIEW). */
+  lineIds?: string[];
+  /** Spec 003 (IMPORT_INVALID). */
+  preview?: unknown;
   /** Overrides the default HTTP status for this code (e.g. ACCOUNT_PENDING_DELETION on sign-up is 409). */
   status?: number;
 }

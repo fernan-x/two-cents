@@ -12,6 +12,10 @@ const MATRIX: Record<Permission, [boolean, boolean, boolean, boolean]> = {
   'entries.write': [true, true, true, false],
   'income.write.own': [true, true, true, false],
   'membership.leave': [false, true, true, true],
+  'months.create': [true, true, true, false],
+  'months.activate': [true, true, true, false],
+  'months.close': [true, true, true, false],
+  'months.reopen': [true, true, false, false],
 };
 const ROLES: Role[] = ['owner', 'admin', 'member', 'viewer'];
 

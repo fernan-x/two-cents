@@ -33,7 +33,7 @@ import {
   ZodQuery,
   ZodValidationPipe,
 } from '../../../shared-kernel/presentation/zod-validation.pipe';
-import { RecordIncome } from '../../application/use-cases/income';
+import { UpsertPrimaryIncome } from '../../../planning/application/use-cases/income-lines';
 import {
   ChangeRole,
   LeaveBudget,
@@ -59,7 +59,7 @@ export class MembersController {
     private readonly transfer: TransferOwnership,
     private readonly leaveBudget: LeaveBudget,
     private readonly listEvents: ListEvents,
-    private readonly recordIncome: RecordIncome,
+    private readonly upsertPrimaryIncome: UpsertPrimaryIncome,
   ) {}
 
   @Get('members')
@@ -80,7 +80,7 @@ export class MembersController {
     @Param('monthStart', new ZodValidationPipe(LocalDate)) monthStart: string,
     @ZodBody(PutIncomeRequest) body: z.infer<typeof PutIncomeRequest>,
   ): Promise<Money> {
-    return this.recordIncome.execute(
+    return this.upsertPrimaryIncome.execute(
       auth,
       budgetId,
       monthStart,

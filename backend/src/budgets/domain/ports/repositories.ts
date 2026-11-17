@@ -71,6 +71,7 @@ export interface InvitationRepository {
 }
 export const INVITATION_REPOSITORY = Symbol('InvitationRepository');
 
+/** Read side of a member's monthly counted income; writes go through the planning module (003 R13). */
 export interface IncomeRepository {
   find(
     membershipId: string,
@@ -85,7 +86,6 @@ export interface IncomeRepository {
   listByMemberships(membershipIds: readonly string[]): Promise<MemberIncome[]>;
   /** Whether the budget holds any amount (FR-006). */
   existsForBudget(budgetId: string): Promise<boolean>;
-  save(income: MemberIncome): Promise<void>;
 }
 export const INCOME_REPOSITORY = Symbol('IncomeRepository');
 

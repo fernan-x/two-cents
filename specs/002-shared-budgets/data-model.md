@@ -73,6 +73,8 @@ owner --leave--> refused (409 owner_must_transfer)
 
 ## member_income
 
+> **Replaced by spec 003.** Migration `0005_migrate_member_income.sql` copied each row into a primary `income_line` (see `specs/003-monthly-budget-planning/data-model.md` and research R13) and dropped this table. A member's monthly income is now the sum of their income lines that count toward the household.
+
 Monthly income per member and budget month (FR-024, FR-025a).
 
 | Column | Type | Rules |

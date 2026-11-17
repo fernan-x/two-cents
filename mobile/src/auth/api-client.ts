@@ -22,6 +22,12 @@ export class ApiError extends Error {
       budgetId?: string;
       /** Spec 002: the up-to-date resource on STALE_STATE. */
       current?: unknown;
+      /** Spec 003: total minus the entered shares, signed minor units (SPLIT_MISMATCH). */
+      differenceMinor?: string;
+      /** Spec 003: lines blocking activation (LINES_NEED_REVIEW). */
+      lineIds?: string[];
+      /** Spec 003: the import preview explaining IMPORT_INVALID. */
+      preview?: unknown;
     } = {},
   ) {
     super(code);
@@ -36,6 +42,8 @@ export interface RequestOptions<S extends z.ZodType | undefined> {
   auth?: boolean;
   /** Internal: set when retrying after a refresh. */
   retried?: boolean;
+  /** Extra request headers (spec 003: `If-None-Match`). */
+  headers?: Record<string, string>;
 }
 
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -54,12 +62,13 @@ export function setRefresher(fn: Refresher | null): void {
   refresher = fn;
 }
 
-export async function apiRequest<S extends z.ZodType | undefined = undefined>(
+/** Sends the request (token, timeout, one refresh on 401) and throws ApiError on any non-2xx except 304. */
+async function send<S extends z.ZodType | undefined>(
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
   path: string,
-  options: RequestOptions<S> = {},
-): Promise<S extends z.ZodType ? z.infer<S> : undefined> {
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  options: RequestOptions<S>,
+): Promise<Response> {
+  const headers: Record<string, string> = { Accept: 'application/json', ...options.headers };
   if (options.body !== undefined) headers['Content-Type'] = 'application/json';
   const token = options.auth === false ? null : tokenStore.get();
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -86,19 +95,42 @@ export async function apiRequest<S extends z.ZodType | undefined = undefined>(
     const code = (body as { error?: string } | null)?.error;
     if (code === 'UNAUTHENTICATED' || code === 'SESSION_ENDED') {
       if (code === 'UNAUTHENTICATED' && (await refresher())) {
-        return apiRequest(method, path, { ...options, retried: true });
+        return send(method, path, { ...options, retried: true });
       }
     }
   }
 
-  if (!response.ok) {
+  if (!response.ok && response.status !== 304) {
     const error = await toApiError(response);
     if (error.code === 'SESSION_ENDED' && options.auth !== false) onSessionEnded?.(error.details.reason);
     throw error;
   }
+  return response;
+}
+
+export async function apiRequest<S extends z.ZodType | undefined = undefined>(
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
+  path: string,
+  options: RequestOptions<S> = {},
+): Promise<S extends z.ZodType ? z.infer<S> : undefined> {
+  const response = await send(method, path, options);
+  if (response.status === 304) throw new ApiError('INTERNAL', 304); // only conditional GETs expect 304
   if (response.status === 204 || !options.schema) return undefined as never;
   const json: unknown = await response.json();
   return options.schema.parse(json) as never;
+}
+
+/** A conditional GET (spec 003 research R4): `notModified` when `etag` still matches, else the parsed body. */
+export async function apiConditionalGet<S extends z.ZodType>(
+  path: string,
+  schema: S,
+  etag: string | null,
+): Promise<{ notModified: true; etag: string | null } | { notModified: false; etag: string | null; data: z.infer<S> }> {
+  const response = await send('GET', path, { schema, headers: etag ? { 'If-None-Match': etag } : undefined });
+  const responseEtag = response.headers?.get?.('ETag') ?? null;
+  if (response.status === 304) return { notModified: true, etag: responseEtag ?? etag };
+  const json: unknown = await response.json();
+  return { notModified: false, etag: responseEtag, data: schema.parse(json) };
 }
 
 async function toApiError(response: Response): Promise<ApiError> {

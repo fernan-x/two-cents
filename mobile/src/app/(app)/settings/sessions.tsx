@@ -9,7 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { apiRequest } from '@/auth/api-client';
 import { errorMessage } from '@/auth/error-message';
 import { Button, ErrorBanner, FormScreen } from '@/components/form';
+import { Icon } from '@/components/icon';
 import { ThemedText } from '@/components/themed-text';
+import { IconLabel } from '@/components/ui';
 import { Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -49,14 +51,12 @@ export default function Sessions() {
       {sessions.data?.sessions.map((s) => (
         <View key={s.id} style={[styles.card, { backgroundColor: theme.backgroundElement }]} accessible accessibilityLabel={`${s.deviceName}, ${t(`sessions.platform.${s.platform}`)}${s.current ? `, ${t('sessions.thisDevice')}` : ''}`}>
           <View style={styles.cardHeader}>
-            <ThemedText type="smallBold">
-              {s.platform === 'ios' ? '' : s.platform === 'android' ? '🤖 ' : '🌐 '}
-              {s.deviceName}
-            </ThemedText>
+            <View style={styles.device}>
+              <Icon name={s.platform === 'web' ? 'globe' : 'phone'} size={18} />
+              <ThemedText type="smallBold">{s.deviceName}</ThemedText>
+            </View>
             {s.current ? (
-              <ThemedText type="small" style={{ color: theme.success }}>
-                ● {t('sessions.thisDevice')}
-              </ThemedText>
+              <IconLabel icon="check" label={t('sessions.thisDevice')} color={theme.success} />
             ) : null}
           </View>
           <ThemedText type="small" themeColor="textSecondary">
@@ -92,6 +92,7 @@ export default function Sessions() {
 }
 
 const styles = StyleSheet.create({
+  device: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one, flexShrink: 1 },
   card: { borderRadius: Radius.md, padding: Spacing.three, gap: Spacing.half },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: Spacing.two },
   confirm: { gap: Spacing.two },

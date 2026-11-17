@@ -5,20 +5,21 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Avatar } from '@/components/avatar';
+import { Icon } from '@/components/icon';
 import { ThemedText } from '@/components/themed-text';
+import { Card as UiCard } from '@/components/ui';
 import { MinTouchTarget, Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 import { formatMoney } from './format';
 import { roleLabel } from './role-label';
 
-/** A rounded group of rows, the same surface as 001's settings cards. */
+/** A rounded group of rows; the shared Nestly card surface. */
 export function Card({ children, accessibilityLabel }: { children: ReactNode; accessibilityLabel?: string }) {
-  const theme = useTheme();
   return (
-    <View style={[styles.card, { backgroundColor: theme.backgroundElement }]} accessibilityLabel={accessibilityLabel}>
+    <UiCard style={styles.card} accessibilityLabel={accessibilityLabel}>
       {children}
-    </View>
+    </UiCard>
   );
 }
 
@@ -59,9 +60,7 @@ export function ChoiceRow({
         styles.choice,
         { borderColor: selected ? theme.primary : theme.border, opacity: disabled ? 0.6 : pressed ? 0.85 : 1 },
       ]}>
-      <ThemedText style={[styles.mark, { color: selected ? theme.primary : theme.textSecondary }]}>
-        {selected ? '●' : '○'}
-      </ThemedText>
+      <Icon name={selected ? 'radioOn' : 'radioOff'} size={22} themeColor={selected ? 'primary' : 'textSecondary'} />
       <View style={styles.choiceText}>
         <ThemedText type="smallBold">{label}</ThemedText>
         {detail ? (
@@ -145,7 +144,7 @@ export function MemberRow({ member, onPress }: { member: MemberView; onPress?: (
           {incomeText ? ` · ${incomeText}` : ''}
         </ThemedText>
       </View>
-      {onPress ? <ThemedText themeColor="textSecondary">›</ThemedText> : null}
+      {onPress ? <Icon name="chevR" themeColor="textSecondary" /> : null}
     </>
   );
   const label = `${name}, ${roleLabel(t, member.role)}${incomeText ? `, ${incomeText}` : ''}`;
@@ -190,7 +189,7 @@ export function RoleChoices({
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: Radius.md, padding: Spacing.three, gap: Spacing.two },
+  card: { gap: Spacing.one },
   section: { marginTop: Spacing.two, textTransform: 'uppercase' },
   choice: {
     flexDirection: 'row',
@@ -201,7 +200,6 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
     minHeight: MinTouchTarget,
   },
-  mark: { fontSize: 18, width: 22 },
   choiceText: { flex: 1, gap: Spacing.half },
   choices: { gap: Spacing.two },
   stepperBlock: { gap: Spacing.one },

@@ -1,3 +1,4 @@
+import { MembershipHooks } from '../services/membership-hooks';
 import { Inject, Injectable } from '@nestjs/common';
 import type {
   AcceptInvitationResponse,
@@ -150,6 +151,7 @@ export class AcceptInvitation {
     @Inject(ID_GENERATOR) private readonly ids: IdGenerator,
     @Inject(CLOCK) private readonly clock: Clock,
     private readonly events: MembershipEvents,
+    private readonly hooks: MembershipHooks,
   ) {}
 
   async execute(
@@ -187,6 +189,7 @@ export class AcceptInvitation {
         now,
       });
       await this.memberships.save(membership);
+      await this.hooks.memberJoined(budget.id, membership.id);
       await this.events.record(
         budget.id,
         'joined',

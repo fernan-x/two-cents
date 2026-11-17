@@ -4,9 +4,10 @@ import type { LocalDate } from '@two-cents/shared/domain';
 import { DrizzleTransactionRunner } from '../../../shared-kernel/infrastructure/db/drizzle-transaction-runner';
 import {
   inviteCodeFailures,
-  memberIncomes,
+  budgetLines,
+  budgetMonths,
+  incomeLines,
   membershipEvents,
-  memberships,
   pushDevices,
   sessions,
 } from '../../../shared-kernel/infrastructure/db/schema';
@@ -20,86 +21,82 @@ import type {
   PushDeviceRepository,
 } from '../../domain/ports/repositories';
 
+/**
+ * A member's monthly income, read from spec 003's income lines: the sum of the lines that count
+ * toward the household (003 research R13). Writes go through the planning module.
+ */
 @Injectable()
 export class DrizzleIncomeRepository implements IncomeRepository {
   constructor(private readonly db: DrizzleTransactionRunner) {}
+
+  private async sums(
+    membershipIds: readonly string[],
+    monthStart?: LocalDate,
+  ): Promise<MemberIncome[]> {
+    if (membershipIds.length === 0) return [];
+    const rows = await this.db
+      .executor()
+      .select({
+        membershipId: incomeLines.membershipId,
+        monthStart: budgetMonths.periodStart,
+        amountMinor: sql<string>`sum(${incomeLines.amountMinor})`,
+        currency: sql<string>`min(${incomeLines.currency})`,
+        updatedAt: sql<Date>`max(${incomeLines.updatedAt})`,
+      })
+      .from(incomeLines)
+      .innerJoin(budgetMonths, eq(budgetMonths.id, incomeLines.monthId))
+      .where(
+        and(
+          inArray(incomeLines.membershipId, [...membershipIds]),
+          eq(incomeLines.countsTowardHousehold, true),
+          monthStart ? eq(budgetMonths.periodStart, monthStart) : undefined,
+        ),
+      )
+      .groupBy(incomeLines.membershipId, budgetMonths.periodStart)
+      .orderBy(budgetMonths.periodStart);
+    return rows.map((r) =>
+      MemberIncome.fromPersistence({
+        membershipId: r.membershipId,
+        monthStart: r.monthStart,
+        amountMinor: BigInt(r.amountMinor),
+        currency: r.currency,
+        updatedAt: new Date(r.updatedAt),
+        updatedBy: null,
+      }),
+    );
+  }
 
   async find(
     membershipId: string,
     monthStart: LocalDate,
   ): Promise<MemberIncome | null> {
-    const [row] = await this.db
-      .executor()
-      .select()
-      .from(memberIncomes)
-      .where(
-        and(
-          eq(memberIncomes.membershipId, membershipId),
-          eq(memberIncomes.monthStart, monthStart),
-        ),
-      )
-      .limit(1);
-    return row ? MemberIncome.fromPersistence(row) : null;
+    const [income] = await this.sums([membershipId], monthStart);
+    return income ?? null;
   }
 
   async listForMonth(
     membershipIds: readonly string[],
     monthStart: LocalDate,
   ): Promise<Map<string, MemberIncome>> {
-    if (membershipIds.length === 0) return new Map();
-    const rows = await this.db
-      .executor()
-      .select()
-      .from(memberIncomes)
-      .where(
-        and(
-          inArray(memberIncomes.membershipId, [...membershipIds]),
-          eq(memberIncomes.monthStart, monthStart),
-        ),
-      );
-    return new Map(
-      rows.map((r) => [r.membershipId, MemberIncome.fromPersistence(r)]),
-    );
+    const incomes = await this.sums(membershipIds, monthStart);
+    return new Map(incomes.map((i) => [i.membershipId, i]));
   }
 
-  async listByMemberships(
-    membershipIds: readonly string[],
-  ): Promise<MemberIncome[]> {
-    if (membershipIds.length === 0) return [];
-    const rows = await this.db
-      .executor()
-      .select()
-      .from(memberIncomes)
-      .where(inArray(memberIncomes.membershipId, [...membershipIds]));
-    return rows.map((r) => MemberIncome.fromPersistence(r));
+  listByMemberships(membershipIds: readonly string[]): Promise<MemberIncome[]> {
+    return this.sums(membershipIds);
   }
 
+  /** Any income line or budget line locks the currency (FR-006). */
   async existsForBudget(budgetId: string): Promise<boolean> {
-    const [row] = await this.db
-      .executor()
-      .select({ one: sql<number>`1` })
-      .from(memberIncomes)
-      .innerJoin(memberships, eq(memberships.id, memberIncomes.membershipId))
-      .where(eq(memberships.budgetId, budgetId))
-      .limit(1);
-    return !!row;
-  }
-
-  async save(income: MemberIncome): Promise<void> {
-    const row = income.toPersistence();
-    await this.db
-      .executor()
-      .insert(memberIncomes)
-      .values(row)
-      .onConflictDoUpdate({
-        target: [memberIncomes.membershipId, memberIncomes.monthStart],
-        set: {
-          amountMinor: row.amountMinor,
-          currency: row.currency,
-          updatedAt: row.updatedAt,
-          updatedBy: row.updatedBy,
-        },
-      });
+    const result = await this.db.executor().execute<{ exists: boolean }>(sql`
+      SELECT EXISTS (
+        SELECT 1 FROM ${incomeLines}
+        JOIN ${budgetMonths} ON ${budgetMonths.id} = ${incomeLines.monthId}
+        WHERE ${budgetMonths.budgetId} = ${budgetId}
+      ) OR EXISTS (
+        SELECT 1 FROM ${budgetLines} WHERE ${budgetLines.budgetId} = ${budgetId}
+      ) AS "exists"`);
+    return result.rows[0]?.exists === true;
   }
 }
 

@@ -42,6 +42,24 @@ export const ErrorCode = z.enum([
   'INVITATION_USED',
   'INVALID_AMOUNT',
   'INVALID_MONTH',
+  // Spec 003
+  'MONTH_NOT_FOUND',
+  'MONTH_EXISTS',
+  'MONTH_CLOSED',
+  'INVALID_TRANSITION',
+  'LINES_NEED_REVIEW',
+  'SPLIT_MISMATCH',
+  'NO_INCOME_FOR_PROPORTIONAL',
+  'SUB_ITEMS_EXCEED_TOTAL',
+  'AMOUNT_TOO_LARGE',
+  'SCOPE_REQUIRED',
+  'NOT_LINE_OWNER',
+  'NOT_INCOME_OWNER',
+  'TEMPLATE_NAME_TAKEN',
+  'IMPORT_INVALID',
+  'UNKNOWN_MEMBER',
+  'TOTAL_REQUIRED',
+  'INVALID_FORMULA',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
 
@@ -71,5 +89,11 @@ export const ApiError = z.object({
   budgetId: z.string().optional(),
   /** Spec 002: the up-to-date resource on STALE_STATE. */
   current: z.unknown().optional(),
+  /** Spec 003: total minus the sum of entered shares, signed minor units (SPLIT_MISMATCH). */
+  differenceMinor: z.string().optional(),
+  /** Spec 003: lines blocking activation (LINES_NEED_REVIEW). */
+  lineIds: z.array(z.string()).optional(),
+  /** Spec 003: the import preview explaining IMPORT_INVALID. */
+  preview: z.unknown().optional(),
 });
 export type ApiError = z.infer<typeof ApiError>;

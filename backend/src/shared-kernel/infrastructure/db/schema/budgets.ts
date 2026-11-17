@@ -1,6 +1,5 @@
 import { sql } from 'drizzle-orm';
 import {
-  bigint,
   char,
   check,
   customType,
@@ -114,26 +113,6 @@ export const memberships = pgTable(
       'membership_owner_is_current',
       sql`${t.role} <> 'owner' OR ${t.leftAt} IS NULL`,
     ),
-  ],
-);
-
-export const memberIncomes = pgTable(
-  'member_income',
-  {
-    membershipId: uuid('membership_id')
-      .notNull()
-      .references(() => memberships.id, { onDelete: 'cascade' }),
-    monthStart: date('month_start', { mode: 'string' }).notNull(),
-    amountMinor: bigint('amount_minor', { mode: 'bigint' }).notNull(),
-    currency: char('currency', { length: 3 }).notNull(),
-    updatedAt: ts('updated_at').notNull(),
-    updatedBy: uuid('updated_by').references(() => users.id, {
-      onDelete: 'set null',
-    }),
-  },
-  (t) => [
-    primaryKey({ columns: [t.membershipId, t.monthStart] }),
-    check('member_income_non_negative', sql`${t.amountMinor} >= 0`),
   ],
 );
 

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PlanningCoreModule } from '../planning/planning-core.module';
 import { BudgetsCoreModule } from './budgets-core.module';
 import { BudgetAccessGuard } from './presentation/http/budget-access.guard';
 import {
@@ -15,7 +16,7 @@ import { MembersController } from './presentation/http/members.controller';
 
 /** Spec 002: shared budgets and membership. AuthGuard comes from the global IdentityModule. */
 @Module({
-  imports: [BudgetsCoreModule],
+  imports: [BudgetsCoreModule, PlanningCoreModule],
   controllers: [
     BudgetsController,
     MyBudgetsController,
