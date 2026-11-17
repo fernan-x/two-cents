@@ -3,6 +3,7 @@
  * plus a few extras the app needs. Import one file per icon so the bundle only carries these.
  */
 import type { LucideIcon } from 'lucide-react-native';
+import { Platform } from 'react-native';
 import ArrowDownLeft from 'lucide-react-native/icons/arrow-down-left';
 import ArrowLeft from 'lucide-react-native/icons/arrow-left';
 import ArrowLeftRight from 'lucide-react-native/icons/arrow-left-right';
@@ -156,6 +157,15 @@ const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
+
+/**
+ * Icons are decorative. Native screen readers skip them through the RN accessibility props; on web
+ * the icon is a plain `<svg>` that does not know those props (React warns), so it uses `aria-hidden`.
+ */
+const HIDDEN_FROM_SCREEN_READERS =
+  Platform.OS === 'web'
+    ? ({ 'aria-hidden': true } as const)
+    : ({ accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' } as const);
 /**
  * Decorative by default (hidden from screen readers): the surrounding control carries the label.
  * Stroke stays 2pt at any size, as in Figma.
@@ -181,8 +191,7 @@ export function Icon({
       color={color ?? theme[themeColor]}
       strokeWidth={strokeWidth}
       absoluteStrokeWidth
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
+      {...HIDDEN_FROM_SCREEN_READERS}
     />
   );
 }
