@@ -73,7 +73,7 @@ type MemberView = {
 
 | Method & path | Permission | Request | Response |
 |---------------|-----------|---------|----------|
-| `PUT /budgets/:budgetId/members/me/income/:monthStart` | income.write.own | `{ amountMinor: string }` | `200 Money`. `400 invalid_amount` |
+| `PUT /budgets/:budgetId/members/me/income/:monthStart` | income.write.own | `{ amountMinor: string }` | `200 Money`. `400 invalid_amount`. Since spec 003 it upserts the caller's primary income line (creating an empty Draft month if needed) and returns their counted income for the month; `409 month_closed` on a closed month |
 
 `monthStart` must be the start of a valid budget month for that budget, and the current or a past month the member was included in. Otherwise `400 invalid_month`.
 

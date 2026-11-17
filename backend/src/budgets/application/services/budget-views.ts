@@ -92,6 +92,33 @@ export class BudgetViews {
     return { members, formerMembers: former.map(formerRef) };
   }
 
+  /** How each of these people is shown in history and months (spec 003): name, or former member. */
+  async personRefs(
+    people: readonly Membership[],
+  ): Promise<Map<string, PersonRef>> {
+    const users = await this.users.findByIds(
+      people
+        .filter((m) => m.isCurrent)
+        .map((m) => m.userId)
+        .filter((id): id is string => !!id),
+    );
+    return new Map(
+      people.map((m) => {
+        const user = m.isCurrent && m.userId ? users.get(m.userId) : undefined;
+        return [
+          m.id,
+          user
+            ? {
+                membershipId: m.id,
+                displayName: user.firstName,
+                formerMember: false,
+              }
+            : formerRef(m),
+        ];
+      }),
+    );
+  }
+
   memberView(
     m: Membership,
     user: UserInfo,

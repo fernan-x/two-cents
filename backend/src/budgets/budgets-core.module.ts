@@ -7,6 +7,7 @@ import {
 import { BudgetAccess } from './application/services/budget-access';
 import { BudgetViews } from './application/services/budget-views';
 import { MembershipEvents } from './application/services/membership-events';
+import { MembershipHooks } from './application/services/membership-hooks';
 import { AccountHandoff } from './application/use-cases/account-handoff';
 import {
   CreateBudget,
@@ -18,7 +19,6 @@ import {
   RestoreBudget,
   UpdateBudgetSettings,
 } from './application/use-cases/budgets';
-import { RecordIncome } from './application/use-cases/income';
 import {
   CreateInvitation,
   ExpireInvitations,
@@ -91,6 +91,7 @@ const useCases: Provider[] = [
   BudgetAccess,
   BudgetViews,
   MembershipEvents,
+  MembershipHooks,
   InvitationSender,
   InvitationLookup,
   CreateBudget,
@@ -116,7 +117,6 @@ const useCases: Provider[] = [
   TransferOwnership,
   ListEvents,
   MonthParticipants,
-  RecordIncome,
   RegisterPushDevice,
   UnregisterPushDevice,
   AccountHandoff,
@@ -128,6 +128,7 @@ const useCases: Provider[] = [
  */
 @Module({
   providers: [...adapters, ...useCases],
-  exports: useCases,
+  // Spec 003's planning module reads budgets and memberships through these ports.
+  exports: [...useCases, BUDGET_REPOSITORY, MEMBERSHIP_REPOSITORY],
 })
 export class BudgetsCoreModule {}
