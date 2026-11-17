@@ -1,7 +1,18 @@
 import { z } from 'zod';
 
-import { ApiError, apiRequest, setRefresher } from './api-client';
+import { ApiError, apiConditionalGet, apiRequest, setRefresher } from './api-client';
 import { tokenStore } from './token-store';
+
+const withEtag = (status: number, body: unknown, etag: string | null) =>
+  ({
+    ok: status < 400 && status !== 304,
+    status,
+    json: async () => body,
+    headers: { get: (name: string) => (name.toLowerCase() === 'etag' ? etag : null) },
+    clone() {
+      return this;
+    },
+  }) as unknown as Response;
 
 const json = (status: number, body: unknown) =>
   ({ ok: status < 400, status, json: async () => body, clone() { return this; } }) as unknown as Response;
@@ -48,5 +59,27 @@ describe('apiRequest', () => {
     await apiRequest('GET', '/v1/me', { schema: z.object({ ok: z.boolean() }) });
     expect(refresher).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe('Bearer access-2');
+  });
+
+  describe('apiConditionalGet (spec 003 research R4)', () => {
+    const schema = z.object({ v: z.number() });
+
+    it('sends If-None-Match and returns the body with the new ETag', async () => {
+      fetchMock.mockResolvedValue(withEtag(200, { v: 2 }, '"2"'));
+      const result = await apiConditionalGet('/v1/x', schema, '"1"');
+      expect(fetchMock.mock.calls[0][1].headers['If-None-Match']).toBe('"1"');
+      expect(result).toEqual({ notModified: false, etag: '"2"', data: { v: 2 } });
+    });
+
+    it('reports notModified on 304 without throwing', async () => {
+      fetchMock.mockResolvedValue(withEtag(304, null, '"1"'));
+      await expect(apiConditionalGet('/v1/x', schema, '"1"')).resolves.toEqual({ notModified: true, etag: '"1"' });
+    });
+
+    it('sends no If-None-Match on the first load', async () => {
+      fetchMock.mockResolvedValue(withEtag(200, { v: 1 }, '"1"'));
+      await apiConditionalGet('/v1/x', schema, null);
+      expect(fetchMock.mock.calls[0][1].headers['If-None-Match']).toBeUndefined();
+    });
   });
 });

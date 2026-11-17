@@ -2,8 +2,12 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { setupOnlineManager } from '@/features/planning/online';
 import { registerForPush } from '@/notifications/push-registration';
 import { useNotificationLinks } from '@/notifications/use-notification-links';
+
+// Connectivity drives TanStack Query's online state (spec 003 research R17).
+setupOnlineManager();
 
 export default function AppLayout() {
   const { t } = useTranslation();

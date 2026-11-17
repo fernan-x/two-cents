@@ -18,6 +18,24 @@ export default function BudgetLayout() {
       <Stack.Screen name="members/history" options={{ title: t('budgets.history.title') }} />
       <Stack.Screen name="settings/index" options={{ title: t('budgets.settings.title') }} />
       <Stack.Screen name="settings/delete" options={{ title: t('budgets.delete.title') }} />
+      <Stack.Screen name="months/[monthStart]/index" options={{ title: t('planning.month.title') }} />
+      <Stack.Screen
+        name="months/[monthStart]/line"
+        options={{
+          title: t('planning.line.newTitle'),
+          presentation: 'formSheet',
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.92],
+        }}
+      />
+      <Stack.Screen name="months/[monthStart]/income" options={{ title: t('planning.income.title') }} />
+      <Stack.Screen name="months/[monthStart]/history" options={{ title: t('planning.history.title') }} />
+      <Stack.Screen name="months/index" options={{ title: t('planning.list.title') }} />
+      <Stack.Screen name="months/new" options={{ title: t('planning.new.title'), presentation: 'modal' }} />
+      <Stack.Screen name="months/templates" options={{ title: t('planning.templates.title') }} />
+      <Stack.Screen name="months/categories" options={{ title: t('planning.categoriesScreen.title') }} />
+      <Stack.Screen name="months/import/index" options={{ title: t('planning.import.title') }} />
+      <Stack.Screen name="months/import/preview" options={{ title: t('planning.import.previewTitle') }} />
     </Stack>
   );
 }
