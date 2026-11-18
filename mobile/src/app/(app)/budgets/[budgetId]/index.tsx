@@ -9,6 +9,7 @@ import { errorMessage } from '@/auth/error-message';
 import { Button, ErrorBanner, FormScreen } from '@/components/form';
 import { ThemedText } from '@/components/themed-text';
 import { Icon } from '@/components/icon';
+import { HomeBalance } from '@/features/tracking/home-balance';
 import { Card as UiCard, HeroCard, IconBubble, ListRow, SectionHeader } from '@/components/ui';
 import { FontFamily, MinTouchTarget, Spacing } from '@/constants/theme';
 import { budgetsApi } from '@/features/budgets/api';
@@ -126,6 +127,8 @@ export default function BudgetHome() {
             ))}
           </Card>
 
+          {/* Spec 004 US6: an open balance between members shows on the budget home. */}
+          <HomeBalance budgetId={budgetId} monthStart={data.currentMonth.start} />
           <UiCard style={styles.links}>
             <ListRow
               icon="chart"
@@ -133,6 +136,13 @@ export default function BudgetHome() {
               title={t('planning.month.homeEntry')}
               detail={t('planning.month.homeEntryDetail')}
               onPress={() => goTo(`/budgets/${budgetId}/months/${data.currentMonth.start}`)}
+            />
+            <ListRow
+              divider
+              icon="trend"
+              tone="primary"
+              title={t('tracking.screen.openTracking')}
+              onPress={() => goTo(`/budgets/${budgetId}/months/${data.currentMonth.start}/tracking`)}
             />
             <ListRow
               divider

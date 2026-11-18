@@ -6,7 +6,9 @@
     "@expo-google-fonts/geist": "^0.4.2",
     "@expo/ui": "~58.0.28",
     "@react-native-google-signin/google-signin": "^17.0.0",
+    "@tanstack/query-async-storage-persister": "5.107.1",
     "@tanstack/react-query": "^5.107.1",
+    "@tanstack/react-query-persist-client": "5.107.1",
     "@two-cents/shared": "workspace:*",
     "expo": "~58.0.25",
     "expo-apple-authentication": "~58.0.3",
@@ -19,6 +21,8 @@
     "expo-glass-effect": "~58.0.5",
     "expo-haptics": "~58.0.8",
     "expo-image": "~58.0.18",
+    "expo-image-manipulator": "~58.0.16",
+    "expo-image-picker": "~58.0.10",
     "expo-linking": "~58.0.17",
     "expo-local-authentication": "~58.0.3",
     "expo-localization": "~58.0.5",
@@ -29,6 +33,7 @@
     "expo-secure-store": "~58.0.3",
     "expo-sharing": "~58.0.23",
     "expo-splash-screen": "~58.0.14",
+    "expo-sqlite": "~58.0.18",
     "expo-status-bar": "~58.0.5",
     "expo-symbols": "~58.0.5",
     "expo-system-ui": "~58.0.7",
@@ -78,6 +83,9 @@
     "moduleNameMapper": {
       "\\.css$": "<rootDir>/test/style-mock.js",
       "^lucide-react-native/icons/(.*)$": "<rootDir>/node_modules/lucide-react-native/dist/cjs/icons/$1.js"
-    }
+    },
+    "setupFiles": [
+      "<rootDir>/test/jest-setup.ts"
+    ]
   }
 }

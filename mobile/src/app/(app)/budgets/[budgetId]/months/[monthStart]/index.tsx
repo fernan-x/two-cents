@@ -324,7 +324,22 @@ export default function MonthScreen() {
       })}
 
       <Card style={styles.list}>
+        {/* Spec 004 US2 / 003 FR-037: planned vs actual, also for a Closed month. */}
         <ListRow
+          icon="trend"
+          tone="primary"
+          title={t('tracking.screen.openTracking')}
+          onPress={() => go(`/budgets/${budgetId}/months/${monthStart}/tracking`)}
+        />
+        <ListRow
+          divider
+          icon="receipt"
+          tone="primary"
+          title={t('tracking.screen.seeTransactions')}
+          onPress={() => go(`/budgets/${budgetId}/months/${monthStart}/transactions`)}
+        />
+        <ListRow
+          divider
           icon="clock"
           tone="info"
           title={t('planning.month.history')}

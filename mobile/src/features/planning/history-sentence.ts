@@ -20,6 +20,23 @@ export function historySentence(
   const field = (name: string) => change.changes.find((c) => c.field === name);
   const money = (minor: string | null | undefined) => (minor ? formatMinor(minor, currency, language) : '');
 
+  if (change.entity === 'transaction') {
+    // Spec 004 FR-020: transactions, with the private variant for another member's private line.
+    if (change.private) return t('tracking.history.transaction_private', { actor });
+    if (change.cause === 'recurring') return t('tracking.history.transaction_recurring', { label });
+    if (change.cause === 'import') return t('tracking.history.transaction_imported', { actor, label });
+    const amount = field('amountMinor');
+    if (change.action === 'created')
+      return t('tracking.history.transaction_created', { actor, label, amount: money(amount?.new) });
+    if (change.action === 'deleted')
+      return t('tracking.history.transaction_deleted', { actor, label, amount: money(amount?.old) });
+    if (amount)
+      return t('tracking.history.transaction_updated_amount', { actor, label, old: money(amount.old), new: money(amount.new) });
+    return t('tracking.history.transaction_updated', { actor, label });
+  }
+  if (change.entity === 'settlement')
+    return t('tracking.history.settlement_created', { actor, amount: money(field('amountMinor')?.new) });
+  if (change.entity === 'recurring_rule') return t('tracking.history.recurring_rule', { actor, label });
   if (change.cause === 'import') return t('planning.history.cause_import');
   if (change.private) return t('planning.history.line_private', { actor });
   if (change.cause === 'recompute') return t('planning.history.cause_recompute', { label });

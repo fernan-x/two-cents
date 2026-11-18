@@ -2,6 +2,8 @@ import type { AuthResult, Me, SessionEndReason } from '@two-cents/shared/contrac
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useReducer } from 'react';
 
 import { secureStorage } from './secure-storage';
+import { trackingClient } from '@/features/tracking/client';
+import { clearPersistedTracking } from '@/features/tracking/persist';
 import { tokenStore } from './token-store';
 
 export type AuthStatus = 'booting' | 'signedOut' | 'signedIn' | 'locked' | 'pendingDeletion';
@@ -67,6 +69,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOutLocally = useCallback(async (reason?: SessionEndReason) => {
     tokenStore.set(null);
     await secureStorage.clearRefreshToken();
+    // Spec 004 R3: no transaction of the previous person stays on the device.
+    await clearPersistedTracking(trackingClient() ?? undefined);
     dispatch({ type: 'signedOut', reason });
   }, []);
 
