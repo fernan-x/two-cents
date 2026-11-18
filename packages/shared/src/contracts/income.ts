@@ -12,6 +12,8 @@ export const CreateIncomeRequest = z.object({
   label: IncomeLabel.optional(),
   amountMinor: AmountMinor,
   countsTowardHousehold: z.boolean().default(true),
+  /** Spec 004: meal vouchers (Swile…); never household-counted. */
+  isMealVoucher: z.boolean().default(false),
 });
 export type CreateIncomeRequest = z.input<typeof CreateIncomeRequest>;
 
@@ -20,6 +22,7 @@ export const UpdateIncomeRequest = z.object({
   label: IncomeLabel.nullable().optional(),
   amountMinor: AmountMinor.optional(),
   countsTowardHousehold: z.boolean().optional(),
+  isMealVoucher: z.boolean().optional(),
 });
 export type UpdateIncomeRequest = z.input<typeof UpdateIncomeRequest>;
 
@@ -30,6 +33,8 @@ export const IncomeLineView = z.object({
   label: z.string().nullable(),
   amountMinor: AmountMinor,
   countsTowardHousehold: z.boolean(),
+  /** Spec 004. Optional on the wire so older servers still parse. */
+  isMealVoucher: z.boolean().default(false),
   toConfirm: z.boolean(),
   isPrimary: z.boolean(),
   position: z.number().int(),
