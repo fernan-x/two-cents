@@ -70,6 +70,7 @@ function month(editable: boolean): MonthDetail {
         label: null,
         amountMinor: '90000',
         countsTowardHousehold: true,
+      isMealVoucher: false,
         toConfirm: false,
         isPrimary: true,
         position: 0,

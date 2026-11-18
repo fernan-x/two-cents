@@ -61,8 +61,11 @@ describe('Export (US8)', () => {
       'entries.csv',
       'export.json',
       'profile.csv',
+      'recurring_rules.csv',
       'sessions.csv',
+      'settlements.csv',
       'sign-in-methods.csv',
+      'transactions.csv',
     ]);
     const all = Object.values(files)
       .map((f) => strFromU8(f))

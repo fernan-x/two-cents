@@ -60,6 +60,16 @@ export const ErrorCode = z.enum([
   'UNKNOWN_MEMBER',
   'TOTAL_REQUIRED',
   'INVALID_FORMULA',
+  // Spec 004
+  'PARTS_MISMATCH',
+  'INVALID_PART',
+  'ZERO_AMOUNT',
+  'LINE_NOT_IN_MONTH',
+  'INVALID_PAYMENT_METHOD',
+  'ID_CONFLICT',
+  'RECEIPT_TOO_LARGE',
+  'TOO_MANY_RECEIPTS',
+  'SETTLEMENT_EXCEEDS_BALANCE',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
 
@@ -95,5 +105,13 @@ export const ApiError = z.object({
   lineIds: z.array(z.string()).optional(),
   /** Spec 003: the import preview explaining IMPORT_INVALID. */
   preview: z.unknown().optional(),
+  /** Spec 004: the period with no month yet (MONTH_NOT_FOUND on a transaction write). */
+  periodStart: z.string().optional(),
+  /** Spec 004: whether the caller may create that month. */
+  canCreate: z.boolean().optional(),
+  /** Spec 004: the closed month (MONTH_CLOSED on a transaction write). */
+  monthStart: z.string().optional(),
+  /** Spec 004: whether the caller may reopen it. */
+  canReopen: z.boolean().optional(),
 });
 export type ApiError = z.infer<typeof ApiError>;

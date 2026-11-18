@@ -33,6 +33,7 @@ import { diff, lineSnapshot } from '../services/history';
 import { lineView } from '../services/month-detail-view';
 import { type MonthContext, MonthWriter } from '../services/month-writer';
 import { toPlanIncomes } from '../services/plan-mapping';
+import { PlanningHooks } from '../services/planning-hooks';
 import { PropagateRecurring } from '../services/propagate-recurring';
 
 type CreateInput = Omit<
@@ -202,6 +203,7 @@ export class Lines {
     @Inject(LINE_REPOSITORY) private readonly lines: LineRepository,
     @Inject(CATEGORY_REPOSITORY)
     private readonly categories: CategoryRepository,
+    private readonly hooks: PlanningHooks,
   ) {}
 
   create(
@@ -423,6 +425,8 @@ export class Lines {
         const line = findLine(ctx, lineId);
         assertCanEdit(ctx, line);
         assertVersion(line, expectedVersion);
+        // Spec 004 FR-045: its transactions become unassigned, never deleted.
+        await this.hooks.lineDeleting(line.id);
         await this.lines.delete(line.id);
         ctx.lines.splice(ctx.lines.indexOf(line), 1);
         await ctx.record(

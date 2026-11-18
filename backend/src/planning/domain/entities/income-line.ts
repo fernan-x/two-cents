@@ -9,6 +9,8 @@ export interface IncomeLineProps {
   amountMinor: bigint;
   currency: string;
   countsTowardHousehold: boolean;
+  /** Spec 004: meal vouchers (Swile…), never household-counted (research R8). Defaults to false. */
+  isMealVoucher?: boolean;
   toConfirm: boolean;
   isPrimary: boolean;
   position: number;
@@ -23,6 +25,19 @@ export interface IncomeLineProps {
 export class IncomeLine {
   private constructor(private props: IncomeLineProps) {
     IncomeLine.assertAmount(props.amountMinor);
+    this.props = IncomeLine.normalize(props);
+  }
+
+  /** A meal-voucher income never counts toward the household (spec 004 R8). */
+  private static normalize(props: IncomeLineProps): IncomeLineProps {
+    const isMealVoucher = props.isMealVoucher ?? false;
+    return {
+      ...props,
+      isMealVoucher,
+      countsTowardHousehold: isMealVoucher
+        ? false
+        : props.countsTowardHousehold,
+    };
   }
 
   static assertAmount(amount: bigint): void {
@@ -45,21 +60,24 @@ export class IncomeLine {
   /** Any edit by its member confirms a pre-filled income (FR-006). */
   update(
     changes: Partial<
-      Pick<IncomeLineProps, 'label' | 'amountMinor' | 'countsTowardHousehold'>
+      Pick<
+        IncomeLineProps,
+        'label' | 'amountMinor' | 'countsTowardHousehold' | 'isMealVoucher'
+      >
     >,
     by: string,
     now: Date,
   ): void {
     if (changes.amountMinor !== undefined)
       IncomeLine.assertAmount(changes.amountMinor);
-    this.props = {
+    this.props = IncomeLine.normalize({
       ...this.props,
       ...changes,
       toConfirm: false,
       version: this.props.version + 1,
       updatedAt: now,
       updatedBy: by,
-    };
+    });
   }
 
   confirm(by: string, now: Date): boolean {
@@ -91,6 +109,9 @@ export class IncomeLine {
   }
   get countsTowardHousehold() {
     return this.props.countsTowardHousehold;
+  }
+  get isMealVoucher() {
+    return this.props.isMealVoucher ?? false;
   }
   get toConfirm() {
     return this.props.toConfirm;

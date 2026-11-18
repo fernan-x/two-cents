@@ -1,3 +1,4 @@
+import { BudgetExportContributors } from '../services/export-contributors';
 import { Inject, Injectable } from '@nestjs/common';
 import { pickNewOwner } from '@two-cents/shared/domain';
 import {
@@ -58,6 +59,7 @@ export class AccountHandoff implements BudgetMembershipPort, BudgetExportPort {
     @Inject(EVENT_PUBLISHER) private readonly publisher: EventPublisher,
     @Inject(CLOCK) private readonly clock: Clock,
     private readonly events: MembershipEvents,
+    private readonly contributors: BudgetExportContributors,
   ) {}
 
   async hasAnyBudget(userId: string): Promise<boolean> {
@@ -137,7 +139,18 @@ export class AccountHandoff implements BudgetMembershipPort, BudgetExportPort {
     );
     const byMembership = new Map(mine.map((m) => [m.id, m]));
     const incomes = await this.incomes.listByMemberships(mine.map((m) => m.id));
+    const extra = await this.contributors.collect(
+      mine
+        .filter((m) => m.isCurrent)
+        .map((m) => ({
+          budgetId: m.budgetId,
+          budgetName: budgets.get(m.budgetId)?.name ?? null,
+          membershipId: m.id,
+        })),
+    );
     return {
+      sections: extra.sections,
+      files: extra.files,
       budgets: mine.map((m) => ({
         budgetId: m.budgetId,
         budgetName: budgets.get(m.budgetId)?.name ?? null,

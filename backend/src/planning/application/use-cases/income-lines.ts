@@ -62,6 +62,7 @@ export class IncomeLines {
       label?: string;
       amountMinor: string;
       countsTowardHousehold: boolean;
+      isMealVoucher?: boolean;
     },
   ): Promise<MonthDetail> {
     return this.writer.write(
@@ -80,6 +81,7 @@ export class IncomeLines {
           amountMinor: BigInt(input.amountMinor),
           currency: ctx.budget.currency,
           countsTowardHousehold: input.countsTowardHousehold,
+          isMealVoucher: input.isMealVoucher ?? false,
           toConfirm: false,
           isPrimary: mine.length === 0,
           position: mine.length,
@@ -109,6 +111,7 @@ export class IncomeLines {
       label?: string | null;
       amountMinor?: string;
       countsTowardHousehold?: boolean;
+      isMealVoucher?: boolean;
     },
   ): Promise<MonthDetail> {
     return this.writer.write(
@@ -128,6 +131,9 @@ export class IncomeLines {
               : {}),
             ...(input.countsTowardHousehold !== undefined
               ? { countsTowardHousehold: input.countsTowardHousehold }
+              : {}),
+            ...(input.isMealVoucher !== undefined
+              ? { isMealVoucher: input.isMealVoucher }
               : {}),
           },
           ctx.me.id,

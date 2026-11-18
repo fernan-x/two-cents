@@ -53,7 +53,10 @@ export const MonthSummaryView = z.object({
 });
 export type MonthSummaryView = z.infer<typeof MonthSummaryView>;
 
-/** Filled by feature 04 (transactions); null until then (research R12). */
+/**
+ * @deprecated Always null. Spec 004 serves planned vs actual from `GET …/tracking` instead: actuals
+ * can be negative (refunds) and this unsigned shape would break 003 app builds (004 research R5).
+ */
 export const ActualsView = z.object({
   lines: z.array(z.object({ lineId: z.uuid(), actualMinor: AmountMinor })),
   members: z.array(z.object({ membershipId: z.uuid(), actualMinor: AmountMinor })),
@@ -116,8 +119,8 @@ export const ListMonthsResponse = z.object({
 });
 export type ListMonthsResponse = z.infer<typeof ListMonthsResponse>;
 
-export const ChangeCause = z.enum(['user', 'propagation', 'recompute', 'import', 'system']);
-export const ChangeEntity = z.enum(['line', 'income', 'month', 'order']);
+export const ChangeCause = z.enum(['user', 'propagation', 'recompute', 'import', 'system', 'recurring', 'paid_as_planned']);
+export const ChangeEntity = z.enum(['line', 'income', 'month', 'order', 'transaction', 'settlement', 'recurring_rule']);
 export const ChangeAction = z.enum([
   'created',
   'updated',

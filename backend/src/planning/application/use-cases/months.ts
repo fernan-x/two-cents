@@ -1,3 +1,4 @@
+import { PlanningHooks } from '../services/planning-hooks';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   type CreateMonthRequest,
@@ -57,6 +58,7 @@ export class CreateMonth {
     @Inject(TRANSACTION_RUNNER) private readonly tx: TransactionRunner,
     @Inject(CLOCK) private readonly clock: Clock,
     @Inject(ID_GENERATOR) private readonly ids: IdGenerator,
+    private readonly hooks: PlanningHooks,
   ) {}
 
   async execute(
@@ -188,6 +190,8 @@ export class CreateMonth {
                 : []),
             ],
           });
+          // Spec 004 FR-037: recurring transactions missed while the month did not exist.
+          await this.hooks.monthCreated(ctx);
         },
       );
     });

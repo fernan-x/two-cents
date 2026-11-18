@@ -134,6 +134,8 @@ function IncomeEditor({
   const [label, setLabel] = useState(income?.label ?? '');
   const [amount, setAmount] = useState(income ? toInput(income.amountMinor, i18n.language) : '');
   const [counts, setCounts] = useState(income?.countsTowardHousehold ?? true);
+  // Spec 004 US7: meal vouchers never count toward the household (research R8).
+  const [voucher, setVoucher] = useState(income?.isMealVoucher ?? false);
   const [error, setError] = useState<unknown>(null);
   const read = readAmount(amount, currency);
   const editable = income ? income.editable : true;
@@ -142,6 +144,7 @@ function IncomeEditor({
     income.amountMinor !== read.minor ||
     (income.label ?? '') !== label.trim() ||
     income.countsTowardHousehold !== counts ||
+    income.isMealVoucher !== voucher ||
     income.toConfirm;
 
   const save = useMonthMutation(budgetId, monthStart, (version?: number) =>
@@ -150,12 +153,14 @@ function IncomeEditor({
           expectedVersion: version ?? income.version,
           label: label.trim() ? label.trim() : null,
           amountMinor: read.minor!,
-          countsTowardHousehold: counts,
+          countsTowardHousehold: voucher ? false : counts,
+          isMealVoucher: voucher,
         })
       : planningApi.createIncome(budgetId, monthStart, {
           ...(label.trim() ? { label: label.trim() } : {}),
           amountMinor: read.minor!,
-          countsTowardHousehold: counts,
+          countsTowardHousehold: voucher ? false : counts,
+          isMealVoucher: voucher,
         }),
   );
   const remove = useMonthMutation(budgetId, monthStart, (version?: number) =>
@@ -181,6 +186,7 @@ function IncomeEditor({
           setLabel('');
           setAmount('');
           setCounts(true);
+          setVoucher(false);
         }
       },
       onError: onError(submit),
@@ -216,8 +222,24 @@ function IncomeEditor({
         <Switch
           accessibilityLabel={t('planning.income.counts')}
           accessibilityHint={t('planning.income.countsHint')}
-          value={counts}
+          value={voucher ? false : counts}
           onValueChange={setCounts}
+          disabled={!editable || voucher}
+          trackColor={{ true: theme.primary, false: theme.track }}
+        />
+      </View>
+      <View style={styles.switchRow}>
+        <View style={styles.flex}>
+          <ThemedText type="smallBold">{t('tracking.vouchers.incomeSwitch')}</ThemedText>
+          <ThemedText type="small" themeColor="textSecondary">
+            {t('tracking.vouchers.incomeHint')}
+          </ThemedText>
+        </View>
+        <Switch
+          accessibilityLabel={t('tracking.vouchers.incomeSwitch')}
+          accessibilityHint={t('tracking.vouchers.incomeHint')}
+          value={voucher}
+          onValueChange={setVoucher}
           disabled={!editable}
           trackColor={{ true: theme.primary, false: theme.track }}
         />

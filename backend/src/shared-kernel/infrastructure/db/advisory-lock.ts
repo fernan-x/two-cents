@@ -6,6 +6,7 @@ export const LOCK_KEYS = {
   expireInvitations: 1_002_012, // spec 002, FR-012
   purgeBudgets: 1_002_038, // spec 002, FR-038b
   outboxRetention: 1_002_900, // spec 002, research R9
+  materializeRecurring: 1_004_036, // spec 004, FR-036
 } as const;
 
 /**

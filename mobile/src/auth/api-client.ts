@@ -28,6 +28,12 @@ export class ApiError extends Error {
       lineIds?: string[];
       /** Spec 003: the import preview explaining IMPORT_INVALID. */
       preview?: unknown;
+      /** Spec 004 (MONTH_NOT_FOUND on a transaction): the period with no month, and whether I may create it. */
+      periodStart?: string;
+      canCreate?: boolean;
+      /** Spec 004 (MONTH_CLOSED on a transaction): the closed month, and whether I may reopen it. */
+      monthStart?: string;
+      canReopen?: boolean;
     } = {},
   ) {
     super(code);
@@ -44,6 +50,8 @@ export interface RequestOptions<S extends z.ZodType | undefined> {
   retried?: boolean;
   /** Extra request headers (spec 003: `If-None-Match`). */
   headers?: Record<string, string>;
+  /** Spec 004: a binary body (receipt photo) instead of JSON. */
+  rawBody?: { contentType: string; data: Uint8Array };
 }
 
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -70,6 +78,7 @@ async function send<S extends z.ZodType | undefined>(
 ): Promise<Response> {
   const headers: Record<string, string> = { Accept: 'application/json', ...options.headers };
   if (options.body !== undefined) headers['Content-Type'] = 'application/json';
+  if (options.rawBody) headers['Content-Type'] = options.rawBody.contentType;
   const token = options.auth === false ? null : tokenStore.get();
   if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -81,7 +90,11 @@ async function send<S extends z.ZodType | undefined>(
     response = await fetch(`${config.apiUrl}${path}`, {
       method,
       headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body: options.rawBody
+        ? (options.rawBody.data as unknown as BodyInit)
+        : options.body === undefined
+          ? undefined
+          : JSON.stringify(options.body),
       signal: controller.signal,
     });
   } catch {

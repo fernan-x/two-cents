@@ -25,8 +25,14 @@ export function toCsv(rows: ExportRow[]): string {
 @Injectable()
 export class ZipExportBuilder implements ExportArchiveBuilder {
   build(data: UserExport): Uint8Array {
+    const { files = [], sections = {}, ...json } = data;
+    const extra: Record<string, Uint8Array> = {};
+    for (const [name, rows] of Object.entries(sections))
+      extra[`${name}.csv`] = strToU8(toCsv(rows));
+    for (const f of files) extra[f.path] = f.bytes;
     return zipSync({
-      'export.json': strToU8(JSON.stringify(data, null, 2)),
+      ...extra,
+      'export.json': strToU8(JSON.stringify({ ...json, ...sections }, null, 2)),
       'profile.csv': strToU8(toCsv([data.profile])),
       'sign-in-methods.csv': strToU8(toCsv(data.signInMethods)),
       'sessions.csv': strToU8(toCsv(data.sessions)),

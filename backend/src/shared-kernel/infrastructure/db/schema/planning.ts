@@ -66,12 +66,17 @@ export const changeCause = pgEnum('change_cause', [
   'recompute',
   'import',
   'system',
+  'recurring',
+  'paid_as_planned',
 ]);
 export const changeEntity = pgEnum('change_entity', [
   'line',
   'income',
   'month',
   'order',
+  'transaction',
+  'settlement',
+  'recurring_rule',
 ]);
 export const changeAction = pgEnum('change_action', [
   'created',
@@ -322,6 +327,8 @@ export const incomeLines = pgTable(
       .notNull()
       .default(true),
     toConfirm: boolean('to_confirm').notNull().default(false),
+    /** Spec 004: meal vouchers, never household-counted (research R8). */
+    isMealVoucher: boolean('is_meal_voucher').notNull().default(false),
     isPrimary: boolean('is_primary').notNull().default(false),
     position: integer('position').notNull(),
     version: integer('version').notNull().default(1),
@@ -342,6 +349,10 @@ export const incomeLines = pgTable(
     check(
       'income_line_amount_range',
       sql`${t.amountMinor} BETWEEN 0 AND 100000000`,
+    ),
+    check(
+      'income_line_meal_voucher_not_counted',
+      sql`NOT ${t.isMealVoucher} OR NOT ${t.countsTowardHousehold}`,
     ),
     check(
       'income_line_label_length',

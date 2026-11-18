@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
 import type { ApiError } from '@two-cents/shared/contracts';
-import { PlanningError } from '@two-cents/shared/domain';
+import { PlanningError, TrackingError } from '@two-cents/shared/domain';
 import type { Response } from 'express';
 import { DomainError } from '../domain/domain-error';
 import { HTTP_STATUS } from './http-status';
@@ -34,8 +34,11 @@ export class DomainErrorFilter implements ExceptionFilter {
         { error: exception.code, ...details },
       ];
     }
-    if (exception instanceof PlanningError) {
-      // Shared planning rules (spec 003) use the same codes as the API.
+    if (
+      exception instanceof PlanningError ||
+      exception instanceof TrackingError
+    ) {
+      // Shared planning (spec 003) and tracking (spec 004) rules use the same codes as the API.
       const difference = exception.details?.differenceMinor;
       return [
         HTTP_STATUS[exception.code],

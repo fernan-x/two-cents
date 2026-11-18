@@ -7,7 +7,8 @@ import {
   Geist_700Bold,
   useFonts,
 } from '@expo-google-fonts/geist';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import type { SessionEndReason } from '@two-cents/shared/contracts';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -19,6 +20,10 @@ import { setRefresher, setSessionEndedHandler } from '@/auth/api-client';
 import { AuthProvider, useAuth } from '@/auth/auth-store';
 import { bootstrapSession, refreshTokens } from '@/auth/bootstrap';
 import { Colors } from '@/constants/theme';
+import { registerTrackingMutations } from '@/features/tracking/mutations';
+import { trackingPersistOptions } from '@/features/tracking/persist';
+import { setTrackingClient } from '@/features/tracking/client';
+import Constants from 'expo-constants';
 import { LockScreen } from '@/lock/lock-screen';
 import { useAppLock } from '@/lock/use-app-lock';
 
@@ -91,6 +96,10 @@ function RootNavigator() {
 const styles = StyleSheet.create({ fill: { flex: 1 } });
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 30_000 } } });
+// Spec 004 research R3: the writes queued offline must know how to run before they are restored.
+registerTrackingMutations(queryClient);
+setTrackingClient(queryClient);
+const persistOptions = trackingPersistOptions(Constants.expoConfig?.version ?? 'dev');
 
 const navLight = {
   ...DefaultTheme,
@@ -106,11 +115,14 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? navDark : navLight}>
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={persistOptions}
+          onSuccess={() => void queryClient.resumePausedMutations()}>
           <AuthProvider>
             <RootNavigator />
           </AuthProvider>
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

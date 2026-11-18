@@ -79,6 +79,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       { faceIDPermission: "Two Cents utilise Face ID pour déverrouiller l'app." },
     ],
     ['@react-native-google-signin/google-signin', { iosUrlScheme: googleIosUrlScheme }],
+    'expo-sqlite',
+    [
+      'expo-image-picker',
+      {
+        photosPermission: 'Two Cents accède à vos photos pour joindre un ticket de caisse.',
+        cameraPermission: 'Two Cents utilise l’appareil photo pour photographier un ticket de caisse.',
+        microphonePermission: false,
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,

@@ -2,6 +2,8 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { useBudgetAccess } from '@/features/budgets/use-budget-access';
+import { QuickAddButton } from '@/features/tracking/quick-add-button';
+import { View } from 'react-native';
 
 /** Every screen of one budget; leaves it as soon as the person loses access (FR-031). */
 export default function BudgetLayout() {
@@ -9,6 +11,7 @@ export default function BudgetLayout() {
   const { budgetId } = useLocalSearchParams<{ budgetId: string }>();
   useBudgetAccess(budgetId);
   return (
+    <View style={{ flex: 1 }}>
     <Stack screenOptions={{ headerBackButtonDisplayMode: 'minimal' }}>
       <Stack.Screen name="index" options={{ title: '' }} />
       <Stack.Screen name="income" options={{ title: t('budgets.income.title') }} />
@@ -36,6 +39,28 @@ export default function BudgetLayout() {
       <Stack.Screen name="months/categories" options={{ title: t('planning.categoriesScreen.title') }} />
       <Stack.Screen name="months/import/index" options={{ title: t('planning.import.title') }} />
       <Stack.Screen name="months/import/preview" options={{ title: t('planning.import.previewTitle') }} />
+      {/* Spec 004 */}
+      <Stack.Screen
+        name="transactions/new"
+        options={{
+          title: t('tracking.quickAdd.title'),
+          presentation: 'formSheet',
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.92],
+        }}
+      />
+      <Stack.Screen name="transactions/[txnId]" options={{ title: t('tracking.detail.title') }} />
+      <Stack.Screen name="transactions/pending" options={{ title: t('tracking.toResolve') }} />
+      <Stack.Screen name="transactions/import/index" options={{ title: t('tracking.import.title') }} />
+      <Stack.Screen name="transactions/import/review" options={{ title: t('tracking.import.review') }} />
+      <Stack.Screen name="recurring/index" options={{ title: t('tracking.recurring.title') }} />
+      <Stack.Screen name="recurring/edit" options={{ title: t('tracking.recurring.edit'), presentation: 'modal' }} />
+      <Stack.Screen name="months/[monthStart]/tracking" options={{ title: t('tracking.screen.title') }} />
+      <Stack.Screen name="months/[monthStart]/transactions" options={{ title: t('tracking.list.title') }} />
+      <Stack.Screen name="months/[monthStart]/envelope/[lineId]" options={{ title: '' }} />
     </Stack>
+    {/* US1 FR-007: the persistent "+" over every main screen of the budget. */}
+    <QuickAddButton budgetId={budgetId} />
+    </View>
   );
 }

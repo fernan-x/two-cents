@@ -18,6 +18,13 @@ export const BUDGET_MEMBERSHIP_PORT = Symbol('BudgetMembershipPort');
 export interface BudgetExportRow {
   budgets: Array<Record<string, string | number | null>>;
   entries: Array<Record<string, string | number | null>>;
+  /** Spec 004: transactions, settlements, recurring rules… one CSV each. */
+  sections?: Record<
+    string,
+    Array<Record<string, string | number | boolean | null>>
+  >;
+  /** Spec 004: receipt photos, stored as files in the archive. */
+  files?: Array<{ path: string; bytes: Uint8Array }>;
 }
 
 export interface BudgetExportPort {
