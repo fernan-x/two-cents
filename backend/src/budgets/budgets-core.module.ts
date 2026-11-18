@@ -7,6 +7,7 @@ import {
 import { BudgetAccess } from './application/services/budget-access';
 import { BudgetViews } from './application/services/budget-views';
 import { MembershipEvents } from './application/services/membership-events';
+import { BudgetExportContributors } from './application/services/export-contributors';
 import { MembershipHooks } from './application/services/membership-hooks';
 import { AccountHandoff } from './application/use-cases/account-handoff';
 import {
@@ -92,6 +93,7 @@ const useCases: Provider[] = [
   BudgetViews,
   MembershipEvents,
   MembershipHooks,
+  BudgetExportContributors,
   InvitationSender,
   InvitationLookup,
   CreateBudget,
@@ -129,6 +131,11 @@ const useCases: Provider[] = [
 @Module({
   providers: [...adapters, ...useCases],
   // Spec 003's planning module reads budgets and memberships through these ports.
-  exports: [...useCases, BUDGET_REPOSITORY, MEMBERSHIP_REPOSITORY],
+  exports: [
+    ...useCases,
+    BUDGET_REPOSITORY,
+    MEMBERSHIP_REPOSITORY,
+    PUSH_DEVICE_REPOSITORY,
+  ],
 })
 export class BudgetsCoreModule {}

@@ -55,8 +55,21 @@ export interface IncomeLineRepository {
 export const INCOME_LINE_REPOSITORY = Symbol('IncomeLineRepository');
 
 export type ChangeCause =
-  'user' | 'propagation' | 'recompute' | 'import' | 'system';
-export type ChangeEntity = 'line' | 'income' | 'month' | 'order';
+  | 'user'
+  | 'propagation'
+  | 'recompute'
+  | 'import'
+  | 'system'
+  | 'recurring'
+  | 'paid_as_planned';
+export type ChangeEntity =
+  | 'line'
+  | 'income'
+  | 'month'
+  | 'order'
+  | 'transaction'
+  | 'settlement'
+  | 'recurring_rule';
 export type ChangeAction =
   | 'created'
   | 'updated'

@@ -1,9 +1,9 @@
 import { Module, type Provider } from '@nestjs/common';
 import { BudgetsCoreModule } from '../budgets/budgets-core.module';
-import { ACTUALS_PROVIDER } from './application/ports';
 import { MonthDetailView } from './application/services/month-detail-view';
 import { MonthMembershipSync } from './application/services/month-membership-sync';
 import { MonthWriter } from './application/services/month-writer';
+import { PlanningHooks } from './application/services/planning-hooks';
 import { PropagateRecurring } from './application/services/propagate-recurring';
 import { RecomputeProportional } from './application/services/recompute-proportional';
 import { ImportMonths } from './application/use-cases/import-months';
@@ -28,7 +28,6 @@ import {
   MONTH_REPOSITORY,
   TEMPLATE_REPOSITORY,
 } from './domain/ports/repositories';
-import { NullActualsProvider } from './infrastructure/null-actuals.provider';
 import { DrizzleLineRepository } from './infrastructure/persistence/drizzle-line.repository';
 import { DrizzleMonthRepository } from './infrastructure/persistence/drizzle-month.repository';
 import {
@@ -45,10 +44,10 @@ const adapters: Provider[] = [
   { provide: CHANGE_LOG, useClass: DrizzleChangeLog },
   { provide: TEMPLATE_REPOSITORY, useClass: DrizzleTemplateRepository },
   { provide: CATEGORY_REPOSITORY, useClass: DrizzleCategoryRepository },
-  { provide: ACTUALS_PROVIDER, useClass: NullActualsProvider },
 ];
 
 export const PLANNING_USE_CASES: Provider[] = [
+  PlanningHooks,
   MonthDetailView,
   MonthWriter,
   RecomputeProportional,
@@ -70,6 +69,13 @@ export const PLANNING_USE_CASES: Provider[] = [
 @Module({
   imports: [BudgetsCoreModule],
   providers: [...adapters, ...PLANNING_USE_CASES, MonthMembershipSync],
-  exports: [...PLANNING_USE_CASES, CATEGORY_REPOSITORY],
+  exports: [
+    ...PLANNING_USE_CASES,
+    CATEGORY_REPOSITORY,
+    MONTH_REPOSITORY,
+    LINE_REPOSITORY,
+    INCOME_LINE_REPOSITORY,
+    CHANGE_LOG,
+  ],
 })
 export class PlanningCoreModule {}

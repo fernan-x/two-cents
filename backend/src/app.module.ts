@@ -4,6 +4,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { BudgetsModule } from './budgets/budgets.module';
 import { IdentityModule } from './identity/identity.module';
 import { PlanningModule } from './planning/planning.module';
+import { TrackingModule } from './tracking/tracking.module';
 import { EnvModule } from './shared-kernel/infrastructure/config/env.module';
 import { DbModule } from './shared-kernel/infrastructure/db/db.module';
 import { HttpContextModule } from './shared-kernel/infrastructure/http/http.module';
@@ -29,6 +30,7 @@ import { WellKnownModule } from './shared-kernel/infrastructure/well-known/well-
     IdentityModule,
     BudgetsModule,
     PlanningModule,
+    TrackingModule,
     WellKnownModule,
   ],
 })

@@ -22,7 +22,6 @@ import {
   LINE_REPOSITORY,
   type LineRepository,
 } from '../../domain/ports/repositories';
-import { ACTUALS_PROVIDER, type ActualsProvider } from '../ports';
 import {
   contributingMembers,
   frozenSummary,
@@ -53,7 +52,6 @@ export class MonthDetailView {
     @Inject(LINE_REPOSITORY) private readonly lines: LineRepository,
     @Inject(INCOME_LINE_REPOSITORY)
     private readonly incomes: IncomeLineRepository,
-    @Inject(ACTUALS_PROVIDER) private readonly actuals: ActualsProvider,
     private readonly people: BudgetViews,
   ) {}
 
@@ -62,11 +60,10 @@ export class MonthDetailView {
     me: Membership,
     month: BudgetMonth,
   ): Promise<MonthDetail> {
-    const [all, lines, incomes, actuals] = await Promise.all([
+    const [all, lines, incomes] = await Promise.all([
       this.memberships.listByBudget(budget.id),
       this.lines.listForMonth(month.id),
       this.incomes.listForMonth(month.id),
-      this.actuals.forMonth(month.id),
     ]);
     const members = contributingMembers(budget, all, month.period);
     const refs = await this.people.personRefs(members);
@@ -123,7 +120,8 @@ export class MonthDetailView {
         privateAggregateView,
       ),
       summary,
-      actuals,
+      // Deprecated, always null: spec 004 serves planned vs actual from GET …/tracking (004 research R5).
+      actuals: null,
       flags: {
         incomesToConfirm: [
           ...new Set(
@@ -198,6 +196,7 @@ export function incomeView(i: IncomeLine, editable: boolean): IncomeLineView {
     label: i.label,
     amountMinor: i.amountMinor.toString(),
     countsTowardHousehold: i.countsTowardHousehold,
+    isMealVoucher: i.isMealVoucher,
     toConfirm: i.toConfirm,
     isPrimary: i.isPrimary,
     position: i.position,

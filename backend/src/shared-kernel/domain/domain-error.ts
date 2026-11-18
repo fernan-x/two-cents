@@ -16,6 +16,14 @@ export interface DomainErrorDetails {
   lineIds?: string[];
   /** Spec 003 (IMPORT_INVALID). */
   preview?: unknown;
+  /** Spec 004 (MONTH_NOT_FOUND on a transaction write): the period with no month yet. */
+  periodStart?: string;
+  /** Spec 004: whether the caller may create that month. */
+  canCreate?: boolean;
+  /** Spec 004 (MONTH_CLOSED on a transaction write): the closed month. */
+  monthStart?: string;
+  /** Spec 004: whether the caller may reopen it. */
+  canReopen?: boolean;
   /** Overrides the default HTTP status for this code (e.g. ACCOUNT_PENDING_DELETION on sign-up is 409). */
   status?: number;
 }

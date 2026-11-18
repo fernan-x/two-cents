@@ -81,6 +81,8 @@ export class ExportData {
       }),
       budgets: budgetData.budgets,
       entries: budgetData.entries,
+      sections: budgetData.sections ?? {},
+      files: budgetData.files ?? [],
     };
   }
 

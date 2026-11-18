@@ -50,6 +50,13 @@
       "when": 1794892058267,
       "tag": "0006_seed_budget_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794940278310,
+      "tag": "0007_transactions",
+      "breakpoints": true
     }
   ]
 }

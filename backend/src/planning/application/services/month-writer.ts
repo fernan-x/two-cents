@@ -87,6 +87,31 @@ export class MonthWriter {
     work: (ctx: MonthContext) => Promise<void>,
     options: { allowClosed?: boolean } = {},
   ): Promise<MonthDetail> {
+    return this.run(
+      auth,
+      budgetId,
+      monthStart,
+      permission,
+      work,
+      options,
+      (ctx) => this.view.build(ctx.budget, ctx.me, ctx.month),
+    );
+  }
+
+  /**
+   * Same guarantees as {@link write} (lock, closed check, one revision bump, history), for writes
+   * that answer with something other than `MonthDetail` (spec 004 transactions). `result` runs
+   * after the revision bump, with the month reloaded.
+   */
+  run<T, R = T>(
+    auth: AuthContext,
+    budgetId: string,
+    monthStart: string,
+    permission: Permission,
+    work: (ctx: MonthContext) => Promise<T>,
+    options: { allowClosed?: boolean } = {},
+    result?: (ctx: MonthContext, value: T) => Promise<R>,
+  ): Promise<R> {
     return this.tx.run(async () => {
       const { budget, membership } = await this.access.require(
         budgetId,
@@ -99,11 +124,12 @@ export class MonthWriter {
       if (!month) throw new DomainError('MONTH_NOT_FOUND');
       if (!options.allowClosed) month.assertWritable();
       const ctx = await this.context(budget, membership, month);
-      await work(ctx);
+      const value = await work(ctx);
       await this.months.save(month);
       await this.months.bumpRevision(month.id);
       const fresh = (await this.months.findById(month.id))!;
-      return this.view.build(budget, membership, fresh);
+      const after = { ...ctx, month: fresh };
+      return result ? result(after, value) : (value as unknown as R);
     });
   }
 

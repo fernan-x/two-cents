@@ -10,6 +10,12 @@ export function configureApp(
 ): void {
   app.useLogger(app.get(Logger));
   (app as NestExpressApplication).set('trust proxy', options.trustProxy);
+  // Spec 004 receipt photos (research R10): raw JPEG bodies. The 1 MB rule is checked by the use
+  // case so it answers RECEIPT_TOO_LARGE; this cap only stops abuse.
+  (app as NestExpressApplication).useBodyParser('raw', {
+    type: 'image/jpeg',
+    limit: '5mb',
+  });
   app.setGlobalPrefix('v1', {
     exclude: ['.well-known/{*path}', 'l/{*path}', 'i/{*path}'],
   });

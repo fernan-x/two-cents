@@ -164,4 +164,104 @@ export const BUDGET_ROUTE_CASES: Record<string, BudgetRouteCase> = {
       months: [{ periodStart: '2026-10-01', incomes: [], lines: [] }],
     },
   },
+  // Spec 004, US1/US2/US5
+  'PUT /v1/budgets/:budgetId/transactions/:txnId': {
+    viewer: 'forbidden',
+    params: { txnId: ID },
+    body: {
+      date: '2026-11-10',
+      amountMinor: '4230',
+      label: 'Leclerc',
+      payer: { kind: 'joint' },
+      parts: [],
+      origin: 'quick_add',
+    },
+  },
+  'PATCH /v1/budgets/:budgetId/transactions/:txnId': {
+    viewer: 'forbidden',
+    params: { txnId: ID },
+    body: { expectedVersion: 1, label: 'x' },
+  },
+  'DELETE /v1/budgets/:budgetId/transactions/:txnId': {
+    viewer: 'forbidden',
+    params: { txnId: `${ID}?expectedVersion=1` },
+  },
+  'GET /v1/budgets/:budgetId/months/:monthStart/transactions': {
+    viewer: 'allowed',
+    params: { monthStart: '2026-11-01' },
+  },
+  'GET /v1/budgets/:budgetId/months/:monthStart/tracking': {
+    viewer: 'allowed',
+    params: { monthStart: '2026-11-01' },
+  },
+  'POST /v1/budgets/:budgetId/months/:monthStart/lines/:lineId/paid-as-planned':
+    {
+      viewer: 'forbidden',
+      params: { monthStart: '2026-11-01', lineId: ID },
+      body: { txnId: ID },
+    },
+  // Spec 004, US4/US5/US6/US8/US9
+  'GET /v1/budgets/:budgetId/transaction-hints': { viewer: 'allowed' },
+  'PUT /v1/budgets/:budgetId/transactions/:txnId/receipts/:receiptId': {
+    viewer: 'forbidden',
+    params: { txnId: ID, receiptId: ID },
+  },
+  'GET /v1/budgets/:budgetId/transactions/:txnId/receipts/:receiptId': {
+    viewer: 'allowed',
+    params: { txnId: ID, receiptId: ID },
+  },
+  'DELETE /v1/budgets/:budgetId/transactions/:txnId/receipts/:receiptId': {
+    viewer: 'forbidden',
+    params: { txnId: ID, receiptId: ID },
+  },
+  'POST /v1/budgets/:budgetId/months/:monthStart/settlements': {
+    viewer: 'forbidden',
+    params: { monthStart: '2026-11-01' },
+    body: { fromMembershipId: ID, toMembershipId: ID, amountMinor: '100' },
+  },
+  'GET /v1/budgets/:budgetId/recurring-transactions': { viewer: 'allowed' },
+  'POST /v1/budgets/:budgetId/recurring-transactions': {
+    viewer: 'forbidden',
+    body: {
+      label: 'Loyer',
+      amountMinor: '95000',
+      dayOfMonth: 5,
+      payer: { kind: 'joint' },
+      paymentMethod: 'transfer',
+      seriesId: null,
+      startsOn: '2026-11-01',
+    },
+  },
+  'PATCH /v1/budgets/:budgetId/recurring-transactions/:ruleId': {
+    viewer: 'forbidden',
+    params: { ruleId: ID },
+    body: { expectedVersion: 1, active: false },
+  },
+  'DELETE /v1/budgets/:budgetId/recurring-transactions/:ruleId': {
+    viewer: 'forbidden',
+    params: { ruleId: `${ID}?expectedVersion=1` },
+  },
+  'GET /v1/budgets/:budgetId/csv-mappings/:fingerprint': {
+    viewer: 'allowed',
+    params: { fingerprint: 'date|libelle|montant' },
+  },
+  'PUT /v1/budgets/:budgetId/csv-mappings/:fingerprint': {
+    viewer: 'forbidden',
+    params: { fingerprint: 'date|libelle|montant' },
+    body: {
+      delimiter: ';',
+      encoding: 'utf-8',
+      dateColumn: 0,
+      dateFormat: 'DD/MM/YYYY',
+      labelColumns: [1],
+      amountColumn: 2,
+      debitColumn: null,
+      creditColumn: null,
+      skipRows: 0,
+    },
+  },
+  'POST /v1/budgets/:budgetId/transaction-imports': {
+    viewer: 'forbidden',
+    body: { dryRun: true, account: { kind: 'joint' }, rows: [] },
+  },
 };

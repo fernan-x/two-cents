@@ -34,6 +34,7 @@ export function incomeSnapshot(i: IncomeLine): Snapshot {
     label: i.label,
     amountMinor: i.amountMinor.toString(),
     countsTowardHousehold: String(i.countsTowardHousehold),
+    isMealVoucher: String(i.isMealVoucher),
   };
 }
 

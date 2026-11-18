@@ -8,6 +8,10 @@ export interface UserExport {
   sessions: ExportRow[];
   budgets: ExportRow[];
   entries: ExportRow[];
+  /** Spec 004 sections (transactions, settlements, recurring rules). */
+  sections?: Record<string, ExportRow[]>;
+  /** Spec 004 receipt photos; written as files, never into export.json. */
+  files?: Array<{ path: string; bytes: Uint8Array }>;
 }
 
 export interface ExportArchiveBuilder {
